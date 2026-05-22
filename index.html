@@ -3,9 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <meta name="theme-color" content="#ef4444">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="image_7.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,4 +35,215 @@
         .card-header { font-size: 1.15rem; font-weight: 700; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 20px; }
         
         .form-grid { display: grid; gap: 20px; }
-        .input-group { display: flex; flex-direction: column; position:
+        .input-group { display: flex; flex-direction: column; position: relative; }
+        label { font-size: 0.85rem; font-weight: 600; color: var(--accent-muted); margin-bottom: 8px; transition: color 0.2s; }
+        input[type="number"], select { width: 100%; padding: 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; font-weight: 500; color: var(--text-main); background-color: #f9fafb; transition: all 0.2s ease; appearance: none; }
+        select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M7 7l3-3 3 3m0 6l-3 3-3-3'/%3E%3C/svg%3E"); background-position: right 16px center; background-repeat: no-repeat; background-size: 1.3em; padding-right: 48px; }
+        input:focus, select:focus { border-color: var(--primary); background-color: #ffffff; box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15); outline: none; }
+        input:focus + label, select:focus + label { color: var(--primary); }
+
+        .checkbox-group { display: flex; align-items: center; padding: 8px 0; cursor: pointer; }
+        .checkbox-group input { width: 24px; height: 24px; margin-right: 14px; accent-color: var(--primary); }
+        .checkbox-group label { margin-bottom: 0; font-size: 1rem; font-weight: 500; color: var(--accent); cursor: pointer; }
+
+        .drawer { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), opacity 0.3s ease; opacity: 0; }
+        .drawer.open { max-height: 1000px; opacity: 1; transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out; margin-top: 16px; }
+
+        .invoice-items { font-size: 0.95rem; margin-bottom: 16px; }
+        .invoice-section-title { font-weight: 700; color: var(--accent); margin: 20px 0 12px 0; padding-bottom: 8px; border-bottom: 2px solid var(--primary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .invoice-row { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .invoice-row .name { color: var(--text-muted); padding-right: 16px; }
+        .invoice-row .cost { font-weight: 600; color: var(--text-main); }
+        .terms-block { font-size: 0.75rem; color: var(--text-muted); margin-top: 24px; padding-top: 16px; border-top: 1px dashed var(--border); line-height: 1.4; }
+        
+        .bottom-action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.98); border-top: 1px solid var(--border); padding: 16px 24px 24px 24px; box-shadow: 0 -8px 24px rgba(0,0,0,0.08); z-index: 100; }
+        .grand-total-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; }
+        .grand-total-label { font-size: 0.9rem; font-weight: 600; color: var(--accent-muted); line-height: 1.3; }
+        .grand-total-value { font-size: 1.8rem; font-weight: 800; color: var(--accent); line-height: 1; letter-spacing: -1px; }
+        
+        .button-group { display: flex; gap: 12px; }
+        .btn-share { flex: 2; background-color: var(--accent); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.05rem; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .btn-share:active { transform: scale(0.97); }
+        .btn-share svg { width: 20px; height: 20px; fill: var(--primary); }
+        .btn-pdf { flex: 1; background-color: white; color: var(--accent); border: 2px solid var(--border); padding: 16px; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.2s; }
+        .btn-pdf:active { transform: scale(0.97); background: #f3f4f6; }
+
+        #toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 12px 24px; border-radius: 30px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2); transition: top 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 999999; display: flex; align-items: center; gap: 8px; border-left: 4px solid var(--primary); }
+        #toast.show { top: 20px; }
+    </style>
+</head>
+<body>
+
+<div id="pinScreen">
+    <div class="pin-box">
+        <img src="image_7.png" alt="Logo" onerror="this.style.display='none'">
+        <h2>Authorized Access</h2>
+        <input type="password" id="pinInput" class="pin-input" maxlength="4" placeholder="••••" inputmode="numeric">
+        <button onclick="verifyPin()" class="pin-btn">Unlock System</button>
+    </div>
+</div>
+
+<div id="toast">⚠️ <span id="toastMsg">Message</span></div>
+
+<div id="appContent">
+    <header class="main-header stagger-item" style="animation-delay: 0.1s">
+        <img src="image_7.png" alt="Team Inspire Logo" onerror="this.style.display='none'">
+        <h1>Team Inspire Digital Media Pod rate calculator</h1>
+    </header>
+
+    <div class="card stagger-item" style="animation-delay: 0.2s">
+        <h2 class="card-header">1. Specifications</h2>
+        <div class="form-grid">
+            <div class="input-group"><label>Book Quantity</label><input type="number" id="bookQty" min="0" placeholder="0"></div>
+            <div class="input-group"><label>Total Inner Pages</label><input type="number" id="innerPages" min="0" placeholder="0"></div>
+            <div class="input-group"><label>Color Pages Count</label><input type="number" id="colorPages" min="0" placeholder="0"></div>
+            <div class="input-group"><label>Inner Page Size</label><select id="innerSize"></select></div>
+            <div class="input-group"><label>Paper Material</label><select id="paperMaterial"></select></div>
+            <div class="input-group"><label>Paper GSM</label><select id="paperGsm"></select></div>
+            <div class="input-group"><label>Print Type</label><select id="printType"></select></div>
+            <div class="input-group"><label>Color Page Size</label><select id="colorSize"></select></div>
+            <div class="input-group"><label>Cover Page Rate</label><select id="coverSize"></select></div>
+            <div class="input-group"><label>Binding Type</label><select id="bindingSize"></select></div>
+        </div>
+    </div>
+
+    <div class="card stagger-item" style="animation-delay: 0.3s">
+        <h2 class="card-header">2. Services</h2>
+        <label class="checkbox-group" style="margin-bottom:0;">
+            <input type="checkbox" id="toggleDesign" onchange="toggleDrawer()">
+            <span>Enable Design & Publishing Services</span>
+        </label>
+        
+        <div id="designDrawer" class="drawer">
+            <div style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px;">
+                <label class="checkbox-group"><input type="checkbox" id="coverDesign"><span>Include Cover Design</span></label>
+                <div class="form-grid" style="margin-bottom: 20px;">
+                    <div class="input-group"><label>Inner Page Design Size</label><select id="designSize"></select></div>
+                    <div class="input-group"><label>Inner Design (Pages)</label><input type="number" id="designPages" min="0" placeholder="0"></div>
+                    <div class="input-group"><label>Basic Layout (Pages)</label><input type="number" id="layoutPages" min="0" placeholder="0"></div>
+                    <div class="input-group"><label>DTP (Pages)</label><input type="number" id="dtpPages" min="0" placeholder="0"></div>
+                    <div class="input-group"><label>Proofreading (Pages)</label><input type="number" id="proofPages" min="0" placeholder="0"></div>
+                </div>
+                <label class="checkbox-group" style="border-top: 1px solid var(--border); padding-top: 16px;"><input type="checkbox" id="publishingPkg"><span>Full Publishing Package</span></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="card stagger-item" id="invoiceCard" style="border-color: var(--primary); border-width: 2px; animation-delay: 0.4s;">
+        <h2 class="card-header" style="color: var(--primary);">Estimated Quotation</h2>
+        <div id="invoiceItems" class="invoice-items"><div style="text-align:center; color:var(--text-muted); font-style:italic;">Enter specifications...</div></div>
+        
+        <div class="terms-block">
+            <strong>Terms & Conditions:</strong><br>
+            • Quote valid for 15 days from date of generation.<br>
+            • 50% advance payment required to initiate production.<br>
+            • Tolerance of +/- 5% applicable on final print quantity and paper GSM.<br>
+            • GST not applicable for printed books.
+        </div>
+    </div>
+</div>
+
+<div class="bottom-action-bar" id="bottomBar" style="display:none;">
+    <div class="grand-total-row">
+        <div class="grand-total-label">ESTIMATED TOTAL<br><span style="font-size:0.8rem; font-weight:400; color:var(--accent-muted);">GST: 0% (Books)</span></div>
+        <div class="grand-total-value" id="grandTotal">₹0</div>
+    </div>
+    <div class="button-group">
+        <button onclick="generatePDF()" class="btn-pdf">📥 PDF</button>
+        <button onclick="shareToWhatsApp()" class="btn-share">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.003,2.001C17.525,2.001,22.005,6.48,22.005,12c0,5.521-4.479,10-10,10c-1.614,0-3.155-0.384-4.521-1.07l-1.61,0.51l-4.101,1.29l0.49-4.11l1.11-1.22c-0.81-1.42-1.27-3.07-1.27-4.82C2.003,6.48,6.481,2.001,12.003,2.001M16.89,15.541c-0.279-0.14-1.639-0.81-1.889-0.91c-0.26-0.09-0.451-0.14-0.63,0.14c-0.19,0.28-0.729,0.91-0.9,1.1c-0.159,0.18-0.33,0.2-0.6,0.07c-0.28-0.14-1.189-0.44-2.27-1.4c-0.84-0.75-1.41-1.67-1.57-1.95c-0.17-0.28-0.021-0.43,0.13-0.57c0.129-0.13,0.28-0.33,0.421-0.49c0.14-0.17,0.189-0.28,0.281-0.47c0.091-0.18,0.05-0.35-0.019-0.49c-0.07-0.14-0.631-1.52-0.86-2.08c-0.22-0.54-0.461-0.46-0.63-0.47c-0.169-0.01-0.351-0.01-0.54-0.01s-0.501,0.07-0.76,0.35s-1,0.98-1,2.39c0,1.42,1.03,2.78,1.17,2.98c0.14,0.19,2.029,3.1,4.91,4.35c0.69,0.3,1.221,0.47,1.64,0.61c0.689,0.22,1.31,0.19,1.8,0.11c0.55-0.08,1.639-0.67,1.871-1.32s0.229-1.22,0.16-1.33S17.159,15.68,16.89,15.541L16.89,15.541z"/></svg>
+            Send Quote
+        </button>
+    </div>
+</div>
+
+<script>
+    const ALLOWED_DOMAIN = "teaminspire-pod.github.io"; 
+    const SYSTEM_PIN = "1234"; 
+    
+    if (window.location.hostname !== ALLOWED_DOMAIN && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") { document.body.innerHTML = ""; }
+
+    function verifyPin() {
+        if (document.getElementById('pinInput').value === SYSTEM_PIN) {
+            document.getElementById('pinScreen').style.opacity = '0';
+            setTimeout(() => { document.getElementById('pinScreen').style.display = 'none'; document.getElementById('appContent').style.display = 'flex'; document.getElementById('bottomBar').style.display = 'block'; initUI(); }, 400);
+        } else { showToast("Invalid PIN Code"); document.getElementById('pinInput').value = ''; }
+    }
+
+    function showToast(msg) { const toast = document.getElementById('toast'); document.getElementById('toastMsg').innerText = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
+    function toggleDrawer() { const drawer = document.getElementById('designDrawer'); if (document.getElementById('toggleDesign').checked) { drawer.classList.add('open'); } else { drawer.classList.remove('open'); document.getElementById('coverDesign').checked = false; document.getElementById('publishingPkg').checked = false; ['designPages','layoutPages','dtpPages','proofPages'].forEach(id => document.getElementById(id).value = ''); calculateQuotation(); } }
+
+    const PRICING_CONFIG = { innerSizes: ["None", "A5", "A4", "A6"], materials: ["None", "Natural Shade (NS)", "Maplitho"], gsmOptions: ["None", "70 GSM", "80 GSM", "100 GSM", "120 GSM"], printTypes: ["None", "Printed", "Plain"], innerPageRatesA5: { "70 GSM": { "Printed": 0.34, "Plain": 0.25 }, "80 GSM": { "Printed": 0.38, "Plain": 0.27 }, "100 GSM": { "Printed": 0.40, "Plain": 0.28 }, "120 GSM": { "Printed": 0.42, "Plain": 0.30 } }, colorPages: { "None": 0, "A6": 1.25, "A5": 2.50, "A4": 4.00 }, cover: { "None": 0, "A6": 4.50, "A5": 9.00, "A4": 18.00 }, binding: { "None": 0, "Perfect/Spiral (A5)": 5.00, "Perfect/Spiral (A4)": 8.00, "Hard Binding (A5)": 8.00, "Hard Binding (A4)": 16.00 }, bindingMinFlatRate: 500, design: { cover: 2500, inner: { "None": 0, "A5": 350, "A4": 450 }, basicLayout: 35, dtp: 25, proofing: 30 }, publishing: 3500 };
+
+    function populateDropdown(id, data) { const select = document.getElementById(id); select.innerHTML = ''; if (Array.isArray(data)) { data.forEach(i => { const opt = document.createElement('option'); opt.value = i; opt.textContent = i; select.appendChild(opt); }); } else { for (const [k, v] of Object.entries(data)) { const opt = document.createElement('option'); opt.value = k; opt.textContent = k === "None" ? "None" : `${k} (₹${v})`; select.appendChild(opt); } } }
+    
+    function initUI() { populateDropdown('innerSize', PRICING_CONFIG.innerSizes); populateDropdown('paperMaterial', PRICING_CONFIG.materials); populateDropdown('paperGsm', PRICING_CONFIG.gsmOptions); populateDropdown('printType', PRICING_CONFIG.printTypes); populateDropdown('colorSize', PRICING_CONFIG.colorPages); populateDropdown('coverSize', PRICING_CONFIG.cover); populateDropdown('bindingSize', PRICING_CONFIG.binding); populateDropdown('designSize', PRICING_CONFIG.design.inner); document.querySelectorAll('input, select').forEach(i => { i.addEventListener('input', () => { saveDraft(); calculateQuotation(); }); }); loadDraft(); calculateQuotation(); }
+
+    function saveDraft() { const inputs = {}; document.querySelectorAll('input:not(#pinInput), select').forEach(el => { inputs[el.id] = el.type === 'checkbox' ? el.checked : el.value; }); localStorage.setItem('quoteDraft', JSON.stringify(inputs)); }
+    function loadDraft() { const saved = JSON.parse(localStorage.getItem('quoteDraft')); if (saved) { Object.keys(saved).forEach(id => { const el = document.getElementById(id); if (el) { if (el.type === 'checkbox') { el.checked = saved[id]; if (id === 'toggleDesign' && saved[id]) toggleDrawer(); } else { el.value = saved[id]; } } }); } }
+
+    const fmt = (num) => Number.isInteger(num) ? num : num.toFixed(2);
+    let globalQuoteData = null; let currentTotal = 0; 
+    
+    function getVal(id) { return parseInt(document.getElementById(id).value) || 0; }
+    function getStr(id) { return document.getElementById(id).value; }
+    
+    function calculateQuotation() {
+        const bookQty = getVal('bookQty'), hasPub = document.getElementById('publishingPkg').checked;
+        if (hasPub && bookQty > 0 && bookQty < 100) { showToast("Publishing package requires minimum 100 books"); document.getElementById('publishingPkg').checked = false; return calculateQuotation(); }
+        let data = { bookQty, innerPages: getVal('innerPages'), colorPages: getVal('colorPages'), innerSize: getStr('innerSize'), material: getStr('paperMaterial'), gsm: getStr('paperGsm'), printType: getStr('printType'), colorSize: getStr('colorSize'), coverSize: getStr('coverSize'), bindingSize: getStr('bindingSize'), perBook: { items: [], total: 0 }, totals: { items: [], grandTotal: 0 }, flatFees: { items: [], total: 0 } };
+        
+        if (bookQty > 0) {
+            if (data.innerPages > 0 && data.innerSize !== "None" && data.material !== "None" && data.gsm !== "None" && data.printType !== "None") { let r = PRICING_CONFIG.innerPageRatesA5[data.gsm][data.printType], m = data.innerSize === "A4" ? 2 : (data.innerSize === "A6" ? 0.5 : 1), rate = r * m, cost = data.innerPages * rate; data.perBook.items.push({ name: `Inner Pages (${data.innerPages} × ₹${rate})`, cost: cost }); data.totals.items.push({ name: `Inner Pages (₹${fmt(cost)} × ${bookQty})`, cost: cost * bookQty }); }
+            if (data.colorPages > 0 && data.colorSize !== "None") { let r = PRICING_CONFIG.colorPages[data.colorSize], cost = data.colorPages * r; data.perBook.items.push({ name: `Color Pages (${data.colorPages} × ₹${r})`, cost: cost }); data.totals.items.push({ name: `Color Pages (₹${fmt(cost)} × ${bookQty})`, cost: cost * bookQty }); }
+            if (data.coverSize !== "None") { let r = PRICING_CONFIG.cover[data.coverSize]; data.perBook.items.push({ name: `Cover Charge`, cost: r }); data.totals.items.push({ name: `Cover Total (₹${fmt(r)} × ${bookQty})`, cost: r * bookQty }); }
+            if (data.bindingSize !== "None") { if (bookQty >= 100) { let r = PRICING_CONFIG.binding[data.bindingSize]; data.perBook.items.push({ name: `${data.bindingSize}`, cost: r }); data.totals.items.push({ name: `Binding (₹${fmt(r)} × ${bookQty})`, cost: r * bookQty }); } else { data.perBook.items.push({ name: `${data.bindingSize}`, cost: 0, note: "(Flat rate)" }); data.totals.items.push({ name: `Binding (Min Charge)`, cost: PRICING_CONFIG.bindingMinFlatRate }); } }
+            data.perBook.total = data.perBook.items.reduce((s, i) => s + i.cost, 0);
+        }
+        
+        if (document.getElementById('coverDesign').checked) data.flatFees.items.push({ name: `Cover Design`, cost: PRICING_CONFIG.design.cover });
+        let dS = getStr('designSize'), dP = getVal('designPages'); if (dP > 0 && dS !== "None") data.flatFees.items.push({ name: `Inner Design`, cost: dP * PRICING_CONFIG.design.inner[dS] });
+        let lP = getVal('layoutPages'); if (lP > 0) data.flatFees.items.push({ name: `Basic Layout`, cost: lP * PRICING_CONFIG.design.basicLayout });
+        let dtP = getVal('dtpPages'); if (dtP > 0) data.flatFees.items.push({ name: `DTP`, cost: dtP * PRICING_CONFIG.design.dtp });
+        let pP = getVal('proofPages'); if (pP > 0) data.flatFees.items.push({ name: `Proofreading`, cost: pP * PRICING_CONFIG.design.proofing });
+        if (hasPub) data.flatFees.items.push({ name: `Publishing Package`, cost: PRICING_CONFIG.publishing });
+        
+        data.flatFees.items.forEach(i => data.totals.items.push({ name: i.name, cost: i.cost })); data.totals.grandTotal = data.totals.items.reduce((s, i) => s + i.cost, 0); globalQuoteData = data; renderInvoice();
+    }
+    
+    function animateValue(obj, start, end, duration) {
+        let startTimestamp = null; const step = (timestamp) => { if (!startTimestamp) startTimestamp = timestamp; const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.innerHTML = `₹${fmt(Math.floor(progress * (end - start) + start))}`; if (progress < 1) { window.requestAnimationFrame(step); } else { obj.innerHTML = `₹${fmt(end)}`; currentTotal = end; } }; window.requestAnimationFrame(step);
+    }
+
+    function renderInvoice() {
+        const c = document.getElementById('invoiceItems'); c.innerHTML = '';
+        if (globalQuoteData.totals.items.length === 0) { c.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-style:italic;">Enter specifications...</div>'; animateValue(document.getElementById('grandTotal'), currentTotal, 0, 300); return; }
+        if (globalQuoteData.perBook.items.length > 0) { c.innerHTML += `<div class="invoice-section-title">Per Book Setup</div>`; globalQuoteData.perBook.items.forEach(i => { let s = i.note ? i.note : `₹${fmt(i.cost)}`; c.innerHTML += `<div class="invoice-row"><span class="name">${i.name}</span><span class="cost">${s}</span></div>`; }); c.innerHTML += `<div class="invoice-row" style="margin-top:8px; border-top: 2px solid var(--border); padding-top: 8px;"><span class="name" style="font-weight:700; color:var(--accent);">Unit Cost</span><span class="cost" style="color:var(--primary); font-size:1.15rem;">₹${fmt(globalQuoteData.perBook.total)}</span></div>`; }
+        c.innerHTML += `<div class="invoice-section-title" style="margin-top:24px;">Totals Breakdown</div>`; globalQuoteData.totals.items.forEach(i => { c.innerHTML += `<div class="invoice-row"><span class="name">${i.name}</span><span class="cost">₹${fmt(i.cost)}</span></div>`; });
+        animateValue(document.getElementById('grandTotal'), currentTotal, globalQuoteData.totals.grandTotal, 400);
+    }
+    
+    function shareToWhatsApp() {
+        if (!globalQuoteData || globalQuoteData.totals.items.length === 0) return showToast('Please configure a quote first.');
+        let d = globalQuoteData, t = "*Team Inspire Digital Media Pod*\n\n*Quotation*\n\n";
+        if (d.bookQty > 0) { t += "*Specifications:*\nSize: " + (d.innerSize !== 'None' ? d.innerSize : 'Standard') + `\nQuantity: ${d.bookQty} Books\n`; if (d.innerPages > 0) t += `Inner Pages: ${d.innerPages} Pages\n`; if (d.printType !== 'None') t += `Printing: ${d.printType === 'Printed' ? 'Black Ink Print' : 'Plain (No Ink)'}\n`; if (d.material !== 'None' && d.gsm !== 'None') t += `Paper: ${d.gsm} ${d.material}\n`; if (d.colorSize !== 'None' && d.colorPages > 0) t += `Color Pages: ${d.colorPages} (${d.colorSize})\n`; if (d.coverSize !== 'None') t += `Cover Rate: ${d.coverSize}\n`; if (d.bindingSize !== 'None') t += `Binding: ${d.bindingSize}\n\n`;
+            if (d.perBook.items.length > 0) { t += "*Per Book Calculation:*\n"; d.perBook.items.forEach(i => { let s = i.note ? i.note : `₹${fmt(i.cost)}/-`; let n = i.name.includes('(') ? i.name.split(' (')[0] + ':' : i.name + ' ='; if(i.name.includes('Inner Pages') || i.name.includes('Color Pages')) { let m = i.name.split('(')[1].replace(')',''); t += `${n}\n${m} = ₹${fmt(i.cost)}/-\n\n`; } else { t += `${n} ${s}\n`; } }); t += `\n*Per Book Rate = ₹${fmt(d.perBook.total)}/-*\n\n`; }
+        }
+        t += "*Total Calculation:*\n\n"; d.totals.items.forEach(i => { if(i.name.includes('(')) { let m = i.name.split('(')[1].replace(')',''); t += `${m} = ₹${fmt(i.cost)}/-\n`; } else { t += `${i.name} = ₹${fmt(i.cost)}/-\n`; } });
+        
+        t += `\n*Grand Total = ₹${fmt(d.totals.grandTotal)}/-*\n\n*Terms & Conditions:*\n- Quote valid for 15 days.\n- 50% advance required.\n- Tolerance of +/- 5% on quantity/GSM.\n- GST: 0% (Books)`; 
+        window.open(`https://wa.me/?text=${encodeURIComponent(t)}`, '_blank');
+    }
+
+    function generatePDF() {
+        if (!globalQuoteData || globalQuoteData.totals.items.length === 0) return showToast('Please configure a quote first.');
+        showToast("Generating PDF Invoice...");
+        const element = document.getElementById('invoiceCard');
+        const opt = { margin: 10, filename: `Quote_Inspire_${Date.now()}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+        html2pdf().set(opt).from(element).save();
+    }
+</script>
+</body>
+</html>
