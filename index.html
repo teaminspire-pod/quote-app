@@ -9,78 +9,63 @@
     <title>Team Inspire | Rate Calculator</title>
     <style>
         :root { 
-            --bg-color: #FAFAF9; 
-            --card-bg: #FFFFFF; 
-            --border: #E2E8F0; 
-            --input-bg: #F1F5F9;
-            --text-main: #1E293B; 
-            --text-muted: #64748B; 
-            --primary: #E11D48; /* Editorial Crimson */
-            --accent: #0F172A; 
+            --bg-color: #FAFAF9; --card-bg: #FFFFFF; --border: #E2E8F0; --input-bg: #F8FAFC;
+            --text-main: #1E293B; --text-muted: #64748B; --primary: #E11D48; --accent: #0F172A; 
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
         body { background-color: var(--bg-color); color: var(--text-main); padding: 16px 16px 160px 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
         
-        #appContent { display: flex; max-width: 600px; margin: 0 auto; flex-direction: column; gap: 24px; animation: fadeIn 0.6s ease-out; }
+        #appContent { display: flex; max-width: 600px; margin: 0 auto; flex-direction: column; gap: 24px; animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .main-header { padding: 16px 0; border-bottom: 2px solid var(--accent); margin-bottom: 8px; }
-        .main-header h1 { font-size: 1.35rem; font-weight: 800; color: var(--accent); line-height: 1.2; letter-spacing: -0.5px; text-transform: uppercase; }
+        .main-header h1 { font-size: 1.35rem; font-weight: 800; color: var(--accent); line-height: 1.2; text-transform: uppercase; letter-spacing: -0.5px; }
 
-        .card { background-color: var(--card-bg); border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.03); transition: all 0.3s ease; }
-        .card-header { font-size: 1.1rem; font-weight: 800; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 24px; letter-spacing: -0.3px; }
+        .card { background-color: var(--card-bg); border-radius: 16px; padding: 24px; box-shadow: 0 4px 20px -5px rgba(0,0,0,0.05); }
+        .card-header { display: flex; align-items: center; gap: 8px; font-size: 1.05rem; font-weight: 800; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 0.5px; }
         
         .form-grid { display: grid; gap: 20px; }
         .input-group { display: flex; flex-direction: column; position: relative; }
-        label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.2s; }
+        label { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
         
+        /* Standard Inputs */
         input[type="number"], select { 
-            width: 100%; padding: 16px; 
-            border: 1px solid transparent; 
-            border-radius: 12px; font-size: 1.05rem; font-weight: 600; 
-            color: var(--text-main); background-color: var(--input-bg); 
-            transition: all 0.2s ease; appearance: none; 
+            width: 100%; padding: 16px; border: 2px solid var(--border); border-radius: 12px; font-size: 1.05rem; font-weight: 700; color: var(--text-main); background-color: var(--input-bg); transition: all 0.2s ease; appearance: none; 
         }
-        
-        select { 
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M7 7l3-3 3 3m0 6l-3 3-3-3'/%3E%3C/svg%3E"); 
-            background-position: right 16px center; background-repeat: no-repeat; background-size: 1.2em; padding-right: 48px; cursor: pointer;
-        }
-        
-        input:focus, select:focus { 
-            border-color: var(--primary); 
-            background-color: var(--card-bg); 
-            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.08); 
-            outline: none; 
-        }
-        input:focus + label, select:focus + label { color: var(--primary); }
+        select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M7 7l3-3 3 3m0 6l-3 3-3-3'/%3E%3C/svg%3E"); background-position: right 16px center; background-repeat: no-repeat; background-size: 1.2em; padding-right: 48px; cursor: pointer; }
+        input:focus, select:focus { border-color: var(--primary); background-color: var(--card-bg); outline: none; box-shadow: 0 4px 15px rgba(225, 29, 72, 0.08); }
+
+        /* Segmented Controls */
+        .segmented-control { display: flex; gap: 8px; width: 100%; }
+        .segmented-control input[type="radio"] { display: none; }
+        .segmented-control label.segment-btn { flex: 1; text-align: center; padding: 14px; background: var(--input-bg); border: 2px solid var(--border); border-radius: 12px; font-weight: 700; font-size: 1rem; color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; text-transform: none; margin-bottom: 0; }
+        .segmented-control input[type="radio"]:checked + label.segment-btn { border-color: var(--primary); background: var(--card-bg); color: var(--primary); box-shadow: 0 4px 15px rgba(225, 29, 72, 0.08); }
 
         .checkbox-group { display: flex; align-items: center; padding: 12px 0; cursor: pointer; }
         .checkbox-group input { width: 22px; height: 22px; margin-right: 14px; accent-color: var(--primary); cursor: pointer; }
-        .checkbox-group label { margin-bottom: 0; font-size: 1.05rem; font-weight: 600; color: var(--accent); cursor: pointer; text-transform: none; letter-spacing: 0; }
+        .checkbox-group label { margin-bottom: 0; font-size: 1.05rem; font-weight: 700; color: var(--accent); cursor: pointer; text-transform: none; letter-spacing: 0; }
 
-        .drawer { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), opacity 0.3s ease; opacity: 0; }
-        .drawer.open { max-height: 1000px; opacity: 1; transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out; margin-top: 16px; }
+        .drawer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, opacity 0.3s ease; opacity: 0; }
+        .drawer.open { max-height: 1000px; opacity: 1; margin-top: 16px; }
 
-        .invoice-items { font-size: 0.95rem; margin-bottom: 16px; }
-        .invoice-section-title { font-weight: 800; color: var(--accent); margin: 24px 0 16px 0; padding-bottom: 8px; border-bottom: 2px solid var(--primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-        .invoice-row { display: flex; justify-content: space-between; margin-bottom: 14px; align-items: center; }
-        .invoice-row .name { color: var(--text-muted); padding-right: 16px; font-weight: 500; }
-        .invoice-row .cost { font-weight: 700; color: var(--accent); }
-        .terms-block { font-size: 0.8rem; color: var(--text-muted); margin-top: 32px; padding-top: 20px; border-top: 1px dashed var(--border); line-height: 1.6; font-weight: 500; }
+        .invoice-section-title { font-weight: 800; color: var(--accent); margin: 24px 0 16px 0; padding-bottom: 8px; border-bottom: 2px solid var(--primary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        .invoice-row { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
+        .invoice-row .name { color: var(--text-muted); padding-right: 16px; font-weight: 600; font-size: 0.95rem; }
+        .invoice-row .cost { font-weight: 800; color: var(--accent); font-size: 0.95rem; }
+        .terms-block { font-size: 0.75rem; color: var(--text-muted); margin-top: 32px; padding-top: 20px; border-top: 1px dashed var(--border); line-height: 1.6; font-weight: 600; }
         
-        .bottom-action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(250, 250, 249, 0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border); padding: 20px 24px 32px 24px; z-index: 100; box-shadow: 0 -10px 30px rgba(0,0,0,0.03); }
-        .grand-total-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
-        .grand-total-label { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); line-height: 1.3; text-transform: uppercase; letter-spacing: 0.5px; }
-        .grand-total-value { font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; letter-spacing: -1px; }
+        .bottom-action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(250, 250, 249, 0.98); border-top: 1px solid var(--border); padding: 20px 24px 32px 24px; z-index: 100; box-shadow: 0 -10px 30px rgba(0,0,0,0.04); }
+        .grand-total-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px; }
+        .grand-total-label { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .grand-total-value { font-size: 2.2rem; font-weight: 800; color: var(--accent); line-height: 1; letter-spacing: -1px; }
         
-        .btn-share { width: 100%; background-color: var(--accent); color: white; border: none; padding: 18px; border-radius: 14px; font-size: 1.1rem; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: transform 0.1s, background-color 0.2s; box-shadow: 0 4px 15px rgba(15, 23, 42, 0.2); }
-        .btn-share:active { transform: scale(0.98); background-color: var(--primary); }
-        .btn-share svg { width: 22px; height: 22px; fill: white; }
+        .btn-share { width: 100%; background-color: var(--accent); color: white; border: none; padding: 18px; border-radius: 12px; font-size: 1.1rem; font-weight: 800; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.2s; box-shadow: 0 4px 15px rgba(15, 23, 42, 0.2); }
+        .btn-share:disabled { background-color: var(--border); color: var(--text-muted); cursor: not-allowed; box-shadow: none; transform: none; }
+        .btn-share:not(:disabled):active { transform: scale(0.98); background-color: var(--primary); }
 
-        #toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 14px 28px; border-radius: 30px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2); transition: top 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 999999; display: flex; align-items: center; gap: 8px; border-left: 4px solid var(--primary); }
-        #toast.show { top: 24px; }
+        #toast { position: fixed; top: auto; bottom: 120px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 12px 24px; border-radius: 30px; font-weight: 700; font-size: 0.9rem; z-index: 999999; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        #toast.show { opacity: 1; }
     </style>
 </head>
 <body>
@@ -93,22 +78,64 @@
     </header>
 
     <div class="card">
-        <h2 class="card-header">1. Manufacturing Specs</h2>
+        <h2 class="card-header">⚙️ 1. Specifications</h2>
         <div class="form-grid">
-            <div class="input-group"><label>Book Quantity</label><input type="number" id="bookQty" min="0" placeholder="0"></div>
-            <div class="input-group"><label>Master Page Size</label><select id="masterSize"><option value="A5">A5</option><option value="A4">A4</option></select></div>
-            <div class="input-group"><label>Total Inner Pages</label><input type="number" id="innerPages" min="0" placeholder="0"></div>
-            <div class="input-group"><label>Paper Material</label><select id="paperMaterial"><option value="None">None</option><option value="Natural Shade (NS)">Natural Shade (NS)</option><option value="Maplitho">Maplitho</option></select></div>
-            <div class="input-group"><label>Paper GSM</label><select id="paperGsm"><option value="None">None</option><option value="70 GSM">70 GSM</option><option value="80 GSM">80 GSM</option><option value="100 GSM">100 GSM</option><option value="120 GSM">120 GSM</option></select></div>
-            <div class="input-group"><label>Print Type</label><select id="printType"><option value="None">None</option><option value="Printed">Printed</option><option value="Plain">Plain</option></select></div>
-            <div class="input-group"><label>Binding Style</label><select id="bindingStyle"><option value="None">None</option><option value="Perfect/Spiral Binding">Perfect/Spiral Binding</option><option value="Hard Binding">Hard Binding</option></select></div>
+            <div class="input-group">
+                <label>Book Quantity *</label>
+                <input type="number" id="bookQty" min="1" placeholder="Minimum 1">
+            </div>
+            <div class="input-group">
+                <label>Master Size</label>
+                <div class="segmented-control">
+                    <input type="radio" id="sizeA5" name="masterSize" value="A5" checked>
+                    <label for="sizeA5" class="segment-btn">A5</label>
+                    <input type="radio" id="sizeA4" name="masterSize" value="A4">
+                    <label for="sizeA4" class="segment-btn">A4</label>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Total Inner Pages *</label>
+                <input type="number" id="innerPages" min="1" placeholder="Required">
+            </div>
+            <div class="input-group">
+                <label>Print Type</label>
+                <div class="segmented-control">
+                    <input type="radio" id="printTypePrinted" name="printType" value="Printed" checked>
+                    <label for="printTypePrinted" class="segment-btn">Printed (B/W)</label>
+                    <input type="radio" id="printTypePlain" name="printType" value="Plain">
+                    <label for="printTypePlain" class="segment-btn">Plain (No Ink)</label>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Paper Material</label>
+                <select id="paperMaterial">
+                    <option value="Natural Shade (NS)" selected>Natural Shade (NS)</option>
+                    <option value="Maplitho">Maplitho</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Paper GSM</label>
+                <select id="paperGsm">
+                    <option value="70 GSM" selected>70 GSM</option>
+                    <option value="80 GSM">80 GSM</option>
+                    <option value="100 GSM">100 GSM</option>
+                    <option value="120 GSM">120 GSM</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Binding Style</label>
+                <select id="bindingStyle">
+                    <option value="Perfect/Spiral Binding" selected>Perfect/Spiral Binding</option>
+                    <option value="Hard Binding">Hard Binding</option>
+                </select>
+            </div>
         </div>
     </div>
 
     <div class="card">
-        <h2 class="card-header">2. Colour Pages</h2>
-        <label class="checkbox-group" style="margin-bottom:0;">
-            <input type="checkbox" id="toggleColour" onchange="toggleColourDrawer()">
+        <h2 class="card-header">🎨 2. Additional Services</h2>
+        <label class="checkbox-group">
+            <input type="checkbox" id="toggleColour" onchange="toggleDrawer('colourDrawer', this.checked); document.getElementById('colorPages').value = '';">
             <span>Include Colour Pages</span>
         </label>
         <div id="colourDrawer" class="drawer">
@@ -117,17 +144,13 @@
                 <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">*Colour size automatically matched to Master Size.</div>
             </div>
         </div>
-    </div>
 
-    <div class="card">
-        <h2 class="card-header">3. Design Services</h2>
-        <label class="checkbox-group" style="margin-bottom:0;">
-            <input type="checkbox" id="toggleDesign" onchange="toggleDesignDrawer()">
+        <label class="checkbox-group" style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 24px;">
+            <input type="checkbox" id="toggleDesign" onchange="toggleDrawer('designDrawer', this.checked); resetDesignInputs();">
             <span>Enable Design & Publishing</span>
         </label>
-        
         <div id="designDrawer" class="drawer">
-            <div style="border-top: 1px solid var(--border); padding-top: 20px; margin-top: 10px;">
+            <div style="padding-top: 16px;">
                 <label class="checkbox-group"><input type="checkbox" id="coverDesign"><span>Include Cover Design</span></label>
                 <div class="form-grid" style="margin-top: 12px; margin-bottom: 24px;">
                     <div class="input-group"><label>Inner Design (Pages)</label><input type="number" id="designPages" min="0" placeholder="0"></div>
@@ -135,14 +158,16 @@
                     <div class="input-group"><label>DTP (Pages)</label><input type="number" id="dtpPages" min="0" placeholder="0"></div>
                     <div class="input-group"><label>Proofreading (Pages)</label><input type="number" id="proofPages" min="0" placeholder="0"></div>
                 </div>
-                <label class="checkbox-group" style="border-top: 1px solid var(--border); padding-top: 20px;"><input type="checkbox" id="publishingPkg"><span>Full Publishing Package</span></label>
+                <label class="checkbox-group" style="border-top: 1px dashed var(--border); padding-top: 16px;"><input type="checkbox" id="publishingPkg"><span>Full Publishing Package</span></label>
             </div>
         </div>
     </div>
 
-    <div class="card" style="border: 2px solid var(--primary); box-shadow: 0 8px 20px rgba(225, 29, 72, 0.08);">
-        <h2 class="card-header" style="color: var(--primary); border-bottom-color: rgba(225, 29, 72, 0.2);">Estimated Quotation</h2>
-        <div id="invoiceItems" class="invoice-items"><div style="text-align:center; color:var(--text-muted); font-style:italic; padding: 20px 0;">Enter specifications...</div></div>
+    <div class="card" style="border: 2px solid var(--primary); margin-bottom: 40px;">
+        <h2 class="card-header" style="color: var(--primary); border-bottom: none; padding-bottom: 0; margin-bottom: 16px;">Estimated Quotation</h2>
+        <div id="invoiceItems" style="min-height: 100px;">
+            <div style="text-align:center; color:var(--text-muted); padding: 40px 0;">Enter specs to generate quote</div>
+        </div>
         
         <div class="terms-block">
             <strong>Terms & Conditions:</strong><br>
@@ -152,26 +177,17 @@
     </div>
 </div>
 
-<div class="bottom-action-bar" id="bottomBar">
+<div class="bottom-action-bar">
     <div class="grand-total-row">
         <div class="grand-total-label">Estimated Total</div>
         <div class="grand-total-value" id="grandTotal">₹0</div>
     </div>
-    <button onclick="shareToWhatsApp()" class="btn-share">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.003,2.001C17.525,2.001,22.005,6.48,22.005,12c0,5.521-4.479,10-10,10c-1.614,0-3.155-0.384-4.521-1.07l-1.61,0.51l-4.101,1.29l0.49-4.11l1.11-1.22c-0.81-1.42-1.27-3.07-1.27-4.82C2.003,6.48,6.481,2.001,12.003,2.001M16.89,15.541c-0.279-0.14-1.639-0.81-1.889-0.91c-0.26-0.09-0.451-0.14-0.63,0.14c-0.19,0.28-0.729,0.91-0.9,1.1c-0.159,0.18-0.33,0.2-0.6,0.07c-0.28-0.14-1.189-0.44-2.27-1.4c-0.84-0.75-1.41-1.67-1.57-1.95c-0.17-0.28-0.021-0.43,0.13-0.57c0.129-0.13,0.28-0.33,0.421-0.49c0.14-0.17,0.189-0.28,0.281-0.47c0.091-0.18,0.05-0.35-0.019-0.49c-0.07-0.14-0.631-1.52-0.86-2.08c-0.22-0.54-0.461-0.46-0.63-0.47c-0.169-0.01-0.351-0.01-0.54-0.01s-0.501,0.07-0.76,0.35s-1,0.98-1,2.39c0,1.42,1.03,2.78,1.17,2.98c0.14,0.19,2.029,3.1,4.91,4.35c0.69,0.3,1.221,0.47,1.64,0.61c0.689,0.22,1.31,0.19,1.8,0.11c0.55-0.08,1.639-0.67,1.871-1.32s0.229-1.22,0.16-1.33S17.159,15.68,16.89,15.541L16.89,15.541z"/></svg>
-        Send Quote
-    </button>
+    <button id="btnShare" onclick="processOutput()" class="btn-share" disabled>Enter Required Specs</button>
 </div>
 
 <script>
-    function showToast(msg) { const toast = document.getElementById('toast'); document.getElementById('toastMsg').innerText = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
-    
-    function toggleColourDrawer() { const drawer = document.getElementById('colourDrawer'); if (document.getElementById('toggleColour').checked) { drawer.classList.add('open'); } else { drawer.classList.remove('open'); document.getElementById('colorPages').value = ''; } calculateQuotation(); }
-    
-    function toggleDesignDrawer() { const drawer = document.getElementById('designDrawer'); if (document.getElementById('toggleDesign').checked) { drawer.classList.add('open'); } else { drawer.classList.remove('open'); document.getElementById('coverDesign').checked = false; document.getElementById('publishingPkg').checked = false; ['designPages','layoutPages','dtpPages','proofPages'].forEach(id => document.getElementById(id).value = ''); } calculateQuotation(); }
-
-    // Pricing Architecture based on your Rate Notes
-    const PRICING_CONFIG = { 
+    // 1. DEVOPS: Decoupled Default Config (Ready for JSON externalization)
+    const DEFAULT_CONFIG = { 
         innerPageRatesA5: { "70 GSM": { "Printed": 0.32, "Plain": 0.25 }, "80 GSM": { "Printed": 0.36, "Plain": 0.27 }, "100 GSM": { "Printed": 0.38, "Plain": 0.28 }, "120 GSM": { "Printed": 0.40, "Plain": 0.30 } }, 
         colorPages: { "A5": 2.50, "A4": 4.00 }, 
         cover: { "A5": 9.00, "A4": 18.00 }, 
@@ -180,71 +196,86 @@
         design: { cover: 2500, inner: { "A5": 350, "A4": 450 }, basicLayout: 35, dtp: 25, proofing: 30 }, 
         publishing: 3500 
     };
+    let PRICING_CONFIG = DEFAULT_CONFIG;
+    let globalQuoteData = null; 
+    let currentTotal = 0;
 
-    window.onload = function initUI() { document.querySelectorAll('input, select').forEach(i => { i.addEventListener('input', () => { calculateQuotation(); }); }); calculateQuotation(); };
+    // Initialization & Listeners
+    window.onload = async function() { 
+        try { 
+            // Attempt to load live rates, fallback to DEFAULT_CONFIG silently if local or fails
+            const res = await fetch('rates.json?v=' + Date.now()); 
+            if(res.ok) PRICING_CONFIG = await res.json(); 
+        } catch(e) { console.log("Running on internal default rates."); }
+        
+        document.querySelectorAll('input, select').forEach(i => i.addEventListener('input', calculateQuotation)); 
+        calculateQuotation(); 
+    };
 
+    // UI Helpers
+    function showToast(msg) { const t = document.getElementById('toast'); document.getElementById('toastMsg').innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+    function toggleDrawer(id, isOpen) { document.getElementById(id).classList.toggle('open', isOpen); calculateQuotation(); }
+    function resetDesignInputs() { document.getElementById('coverDesign').checked = false; document.getElementById('publishingPkg').checked = false; ['designPages','layoutPages','dtpPages','proofPages'].forEach(id => document.getElementById(id).value = ''); }
     const fmt = (num) => Number.isInteger(num) ? num : num.toFixed(2);
-    let globalQuoteData = null; let currentTotal = 0; 
-    
-    function getVal(id) { return parseInt(document.getElementById(id).value) || 0; }
-    function getStr(id) { return document.getElementById(id).value; }
-    
+
+    // 2. QA: Strict Input Sanitization
+    function getVal(id) { 
+        let val = parseInt(document.getElementById(id).value); 
+        return (isNaN(val) || val < 0) ? 0 : val; 
+    }
+    function getRadio(name) { return document.querySelector(`input[name="${name}"]:checked`).value; }
+
+    // 3. CORE LOGIC: State Generation
     function calculateQuotation() {
-        const bookQty = getVal('bookQty'), hasPub = document.getElementById('publishingPkg').checked;
-        if (hasPub && bookQty > 0 && bookQty < 100) { showToast("Publishing package requires minimum 100 books"); document.getElementById('publishingPkg').checked = false; return calculateQuotation(); }
+        const bookQty = getVal('bookQty'), innerPages = getVal('innerPages');
+        const hasPub = document.getElementById('publishingPkg').checked;
+        const btn = document.getElementById('btnShare');
+
+        // Validation Gate
+        if (bookQty < 1 || innerPages < 1) {
+            btn.disabled = true; btn.innerHTML = "Enter Required Specs";
+            document.getElementById('invoiceItems').innerHTML = '<div style="text-align:center; color:var(--text-muted); padding: 40px 0;">Enter specs to generate quote</div>';
+            animateValue(document.getElementById('grandTotal'), currentTotal, 0, 200);
+            return;
+        } else {
+            btn.disabled = false; btn.innerHTML = "Send Quote to Client";
+        }
+
+        if (hasPub && bookQty < 100) { showToast("Publishing requires minimum 100 books."); document.getElementById('publishingPkg').checked = false; return calculateQuotation(); }
         
-        const masterSize = getStr('masterSize');
-        let data = { bookQty, masterSize, innerPages: getVal('innerPages'), colorPages: document.getElementById('toggleColour').checked ? getVal('colorPages') : 0, material: getStr('paperMaterial'), gsm: getStr('paperGsm'), printType: getStr('printType'), bindingStyle: getStr('bindingStyle'), perBook: { items: [], total: 0 }, totals: { items: [], grandTotal: 0 }, flatFees: { items: [], total: 0 }, whatsappText: { perBook: [], totals: [] } };
+        const masterSize = getRadio('masterSize');
+        let data = { bookQty, masterSize, innerPages, colorPages: document.getElementById('toggleColour').checked ? getVal('colorPages') : 0, material: document.getElementById('paperMaterial').value, gsm: document.getElementById('paperGsm').value, printType: getRadio('printType'), bindingStyle: document.getElementById('bindingStyle').value, perBook: { items: [], total: 0 }, totals: { items: [], grandTotal: 0 }, flatFees: { items: [] } };
         
-        if (bookQty > 0) {
-            // Inner Pages Logic
-            if (data.innerPages > 0 && data.material !== "None" && data.gsm !== "None" && data.printType !== "None") { 
-                let baseRate = PRICING_CONFIG.innerPageRatesA5[data.gsm][data.printType];
-                let multiplier = masterSize === "A4" ? 2 : 1; 
-                let rate = baseRate * multiplier; 
-                let cost = data.innerPages * rate; 
-                data.perBook.items.push({ name: `Inner Pages (${data.innerPages} × ₹${fmt(rate)})`, cost: cost }); 
-                data.totals.items.push({ name: `Inner Pages Total`, cost: cost * bookQty }); 
-                data.whatsappText.perBook.push(`Inner Pages (${data.innerPages} pgs × ₹${fmt(rate)}) = ₹${fmt(cost)}/-`);
-                data.whatsappText.totals.push(`Inner Pages (₹${fmt(cost)} × ${bookQty} books) = ₹${fmt(cost * bookQty)}/-`);
-            }
-            
-            // Colour Pages Logic
-            if (data.colorPages > 0) { 
-                let r = PRICING_CONFIG.colorPages[masterSize]; 
-                let cost = data.colorPages * r; 
-                data.perBook.items.push({ name: `Colour Pages (${data.colorPages} × ₹${fmt(r)})`, cost: cost }); 
-                data.totals.items.push({ name: `Colour Pages Total`, cost: cost * bookQty }); 
-                data.whatsappText.perBook.push(`Colour Pages (${data.colorPages} pgs × ₹${fmt(r)}) = ₹${fmt(cost)}/-`);
-                data.whatsappText.totals.push(`Colour Pages (₹${fmt(cost)} × ${bookQty} books) = ₹${fmt(cost * bookQty)}/-`);
-            }
-            
-            // Cover Logic
-            let coverRate = PRICING_CONFIG.cover[masterSize]; 
-            data.perBook.items.push({ name: `Cover Charge (${masterSize})`, cost: coverRate }); 
-            data.totals.items.push({ name: `Cover Total`, cost: coverRate * bookQty }); 
-            data.whatsappText.perBook.push(`Cover Charge (${masterSize}) = ₹${fmt(coverRate)}/-`);
-            data.whatsappText.totals.push(`Cover Total (₹${fmt(coverRate)} × ${bookQty} books) = ₹${fmt(coverRate * bookQty)}/-`);
-            
-            // Binding Logic
-            if (data.bindingStyle !== "None") { 
-                let r = PRICING_CONFIG.binding[data.bindingStyle][masterSize];
-                if (bookQty >= 100) { 
-                    data.perBook.items.push({ name: `Binding (${data.bindingStyle})`, cost: r }); 
-                    data.totals.items.push({ name: `Binding Total`, cost: r * bookQty }); 
-                    data.whatsappText.perBook.push(`Binding (${data.bindingStyle}) = ₹${fmt(r)}/-`);
-                    data.whatsappText.totals.push(`Binding (₹${fmt(r)} × ${bookQty} books) = ₹${fmt(r * bookQty)}/-`);
-                } else { 
-                    data.perBook.items.push({ name: `Binding (${data.bindingStyle})`, cost: 0, note: "(Min Flat Rate)" }); 
-                    data.totals.items.push({ name: `Binding (Min Charge)`, cost: PRICING_CONFIG.bindingMinFlatRate }); 
-                    data.whatsappText.perBook.push(`Binding (${data.bindingStyle}) = ₹0.00/- (Min Flat Rate Applies)`);
-                    data.whatsappText.totals.push(`Binding (Min Flat Charge) = ₹${fmt(PRICING_CONFIG.bindingMinFlatRate)}/-`);
-                } 
-            }
-            data.perBook.total = data.perBook.items.reduce((s, i) => s + i.cost, 0);
+        // Inner Pages Setup
+        let baseRate = PRICING_CONFIG.innerPageRatesA5[data.gsm][data.printType];
+        let rate = baseRate * (masterSize === "A4" ? 2 : 1); 
+        let cost = data.innerPages * rate; 
+        data.perBook.items.push({ name: `Inner Pages (${data.innerPages} × ₹${fmt(rate)})`, cost: cost }); 
+        data.totals.items.push({ name: `Inner Pages Total`, cost: cost * bookQty }); 
+        
+        // Colour Pages
+        if (data.colorPages > 0) { 
+            let r = PRICING_CONFIG.colorPages[masterSize]; 
+            data.perBook.items.push({ name: `Colour Pages (${data.colorPages} × ₹${fmt(r)})`, cost: data.colorPages * r }); 
+            data.totals.items.push({ name: `Colour Pages Total`, cost: (data.colorPages * r) * bookQty }); 
         }
         
-        // Design & Services Logic
+        // Cover & Binding
+        let coverRate = PRICING_CONFIG.cover[masterSize]; 
+        data.perBook.items.push({ name: `Cover Charge (${masterSize})`, cost: coverRate }); 
+        data.totals.items.push({ name: `Cover Total`, cost: coverRate * bookQty }); 
+        
+        let bRate = PRICING_CONFIG.binding[data.bindingStyle][masterSize];
+        if (bookQty >= 100) { 
+            data.perBook.items.push({ name: `Binding (${data.bindingStyle})`, cost: bRate }); 
+            data.totals.items.push({ name: `Binding Total`, cost: bRate * bookQty }); 
+        } else { 
+            data.perBook.items.push({ name: `Binding (${data.bindingStyle})`, cost: 0, note: "Min Flat Rate" }); 
+            data.totals.items.push({ name: `Binding (Min Charge)`, cost: PRICING_CONFIG.bindingMinFlatRate }); 
+        } 
+        data.perBook.total = data.perBook.items.reduce((s, i) => s + i.cost, 0);
+        
+        // Design Flat Fees
         if (document.getElementById('coverDesign').checked) data.flatFees.items.push({ name: `Cover Design`, cost: PRICING_CONFIG.design.cover });
         let dP = getVal('designPages'); if (dP > 0) data.flatFees.items.push({ name: `Inner Design`, cost: dP * PRICING_CONFIG.design.inner[masterSize] });
         let lP = getVal('layoutPages'); if (lP > 0) data.flatFees.items.push({ name: `Basic Layout`, cost: lP * PRICING_CONFIG.design.basicLayout });
@@ -252,49 +283,52 @@
         let pP = getVal('proofPages'); if (pP > 0) data.flatFees.items.push({ name: `Proofreading`, cost: pP * PRICING_CONFIG.design.proofing });
         if (hasPub) data.flatFees.items.push({ name: `Publishing Package`, cost: PRICING_CONFIG.publishing });
         
-        data.flatFees.items.forEach(i => {
-            data.totals.items.push({ name: i.name, cost: i.cost });
-            data.whatsappText.totals.push(`${i.name} = ₹${fmt(i.cost)}/-`);
-        }); 
+        data.flatFees.items.forEach(i => data.totals.items.push(i)); 
+        data.totals.grandTotal = data.totals.items.reduce((s, i) => s + i.cost, 0); 
+        globalQuoteData = data; 
         
-        data.totals.grandTotal = data.totals.items.reduce((s, i) => s + i.cost, 0); globalQuoteData = data; renderInvoice();
+        updateUIRecipt();
     }
     
     function animateValue(obj, start, end, duration) {
-        let startTimestamp = null; const step = (timestamp) => { if (!startTimestamp) startTimestamp = timestamp; const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        obj.innerHTML = `₹${fmt(Math.floor(progress * (end - start) + start))}`; if (progress < 1) { window.requestAnimationFrame(step); } else { obj.innerHTML = `₹${fmt(end)}`; currentTotal = end; } }; window.requestAnimationFrame(step);
+        let startTimestamp = null; const step = (timestamp) => { if (!startTimestamp) startTimestamp = timestamp; const p = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.innerHTML = `₹${fmt(Math.floor(p * (end - start) + start))}`; if (p < 1) window.requestAnimationFrame(step); else { obj.innerHTML = `₹${fmt(end)}`; currentTotal = end; } }; window.requestAnimationFrame(step);
     }
 
-    function renderInvoice() {
+    function updateUIRecipt() {
         const c = document.getElementById('invoiceItems'); c.innerHTML = '';
-        if (globalQuoteData.totals.items.length === 0) { c.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-style:italic; padding: 20px 0;">Enter specifications...</div>'; animateValue(document.getElementById('grandTotal'), currentTotal, 0, 300); return; }
-        if (globalQuoteData.perBook.items.length > 0) { c.innerHTML += `<div class="invoice-section-title">Per Book Setup</div>`; globalQuoteData.perBook.items.forEach(i => { let s = i.note ? i.note : `₹${fmt(i.cost)}`; c.innerHTML += `<div class="invoice-row"><span class="name">${i.name}</span><span class="cost">${s}</span></div>`; }); c.innerHTML += `<div class="invoice-row" style="margin-top:12px; border-top: 1px dashed var(--border); padding-top: 12px;"><span class="name" style="font-weight:800; color:var(--accent);">Unit Cost</span><span class="cost" style="color:var(--primary); font-size:1.15rem;">₹${fmt(globalQuoteData.perBook.total)}</span></div>`; }
-        c.innerHTML += `<div class="invoice-section-title" style="margin-top:32px;">Totals Breakdown</div>`; globalQuoteData.totals.items.forEach(i => { c.innerHTML += `<div class="invoice-row"><span class="name">${i.name}</span><span class="cost">₹${fmt(i.cost)}</span></div>`; });
-        animateValue(document.getElementById('grandTotal'), currentTotal, globalQuoteData.totals.grandTotal, 400);
+        c.innerHTML += `<div class="invoice-section-title">Per Book Setup</div>`; 
+        globalQuoteData.perBook.items.forEach(i => { c.innerHTML += `<div class="invoice-row"><span class="name">${i.name}</span><span class="cost">${i.note ? i.note : '₹'+fmt(i.cost)}</span></div>`; }); 
+        c.innerHTML += `<div class="invoice-row" style="margin-top:12px; border-top: 1px dashed var(--border); padding-top: 12px;"><span class="name" style="font-weight:800; color:var(--accent);">Unit Cost</span><span class="cost" style="color:var(--primary); font-size:1.15rem;">₹${fmt(globalQuoteData.perBook.total)}</span></div>`; 
+        
+        c.innerHTML += `<div class="invoice-section-title" style="margin-top:32px;">Totals Breakdown</div>`; 
+        globalQuoteData.totals.items.forEach(i => { c.innerHTML += `<div class="invoice-row"><span class="name">${i.name}</span><span class="cost">₹${fmt(i.cost)}</span></div>`; });
+        animateValue(document.getElementById('grandTotal'), currentTotal, globalQuoteData.totals.grandTotal, 300);
     }
     
-    function shareToWhatsApp() {
-        if (!globalQuoteData || globalQuoteData.totals.items.length === 0) return showToast('Please configure a quote first.');
-        let d = globalQuoteData, t = "*Team Inspire Digital Media Pod*\n*Quotation*\n\n";
+    // 4. DATA LOGGING & EXPORT
+    function processOutput() {
+        if (!globalQuoteData) return;
+        const d = globalQuoteData;
         
-        if (d.bookQty > 0) { 
-            t += "*Specifications:*\nSize: " + d.masterSize + `\nQuantity: ${d.bookQty} Books\n`; 
-            if (d.innerPages > 0) t += `Inner Pages: ${d.innerPages} Pages\n`; 
-            if (d.colorPages > 0) t += `Colour Pages: ${d.colorPages} Pages\n`; 
-            if (d.material !== 'None' && d.gsm !== 'None') t += `Paper: ${d.gsm} ${d.material}\n`; 
-            if (d.printType !== 'None') t += `Printing: ${d.printType === 'Printed' ? 'Black Ink Print' : 'Plain (No Ink)'}\n\n`;
-            
-            if (d.perBook.items.length > 0) { 
-                t += "*Per Book Breakdown:*\n"; 
-                t += d.whatsappText.perBook.join('\n');
-                t += `\n\n*Per Book Rate = ₹${fmt(d.perBook.total)}/-*\n\n`; 
-            }
-        }
+        // Data Eng: Background tracking (Uncomment and replace URL when ready)
+        /* const WEBHOOK_URL = 'YOUR_GOOGLE_SHEET_APPS_SCRIPT_URL_HERE';
+        fetch(WEBHOOK_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ timestamp: new Date().toISOString(), qty: d.bookQty, size: d.masterSize, total: d.totals.grandTotal }) }).catch(e=>console.log(e));
+        */
+
+        // Principal Eng: Decoupled string generator
+        let t = `*Team Inspire Digital Media Pod*\n*Quotation*\n\n*Specifications:*\nSize: ${d.masterSize}\nQuantity: ${d.bookQty} Books\nInner Pages: ${d.innerPages} Pages\n`; 
+        if (d.colorPages > 0) t += `Colour Pages: ${d.colorPages} Pages\n`; 
+        t += `Paper: ${d.gsm} ${d.material}\nPrinting: ${d.printType === 'Printed' ? 'Black Ink Print' : 'Plain (No Ink)'}\n\n*Per Book Breakdown:*\n`;
         
-        t += "*Total Calculation:*\n"; 
-        t += d.whatsappText.totals.join('\n');
-        t += `\n\n*Grand Total = ₹${fmt(d.totals.grandTotal)}/-*\n\n`;
-        t += `*Terms & Conditions:*\n- 50% advance payment required before printing.\n- Delivery charges extra.`; 
+        d.perBook.items.forEach(i => { 
+            let n = i.name.replace(' (', ' = ').replace(')', ''); // clean visual string mapping
+            t += `${n} ${i.note ? '('+i.note+')' : '= ₹'+fmt(i.cost)+'/-'}\n`; 
+        });
+        t += `\n*Per Book Rate = ₹${fmt(d.perBook.total)}/-*\n\n*Total Calculation:*\n`; 
+        
+        d.totals.items.forEach(i => t += `${i.name} = ₹${fmt(i.cost)}/-\n`);
+        t += `\n*Grand Total = ₹${fmt(d.totals.grandTotal)}/-*\n\n*Terms & Conditions:*\n- 50% advance payment required before printing.\n- Delivery charges extra.`; 
         
         window.location.href = `https://wa.me/?text=${encodeURIComponent(t)}`;
     }
