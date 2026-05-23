@@ -6,12 +6,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <title>Team Inspire | Rate Calculator</title>
+    <title>Team Inspire | Quotation Engine</title>
     <style>
         :root { 
             --bg-color: #FAFAF9; --card-bg: #FFFFFF; --border: #E2E8F0; --input-bg: #F8FAFC;
             --text-main: #1E293B; --text-muted: #64748B; --primary: #E11D48; --accent: #0F172A; 
-            --offset-color: #3B82F6; --success: #10B981;
+            --offset-color: #3B82F6; 
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
@@ -45,21 +45,24 @@
         .input-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 
         .floating-input { position: relative; width: 100%; }
-        .floating-input input, .styled-select { width: 100%; padding: 22px 14px 8px 14px; border: 2px solid var(--border); border-radius: 12px; font-size: 1.05rem; font-weight: 700; color: var(--text-main); background-color: var(--input-bg); transition: all 0.2s ease; appearance: none; font-variant-numeric: tabular-nums; outline: none; }
-        .styled-select { padding: 14px; padding-right: 40px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M7 7l3-3 3 3m0 6l-3 3-3-3'/%3E%3C/svg%3E"); background-position: right 14px center; background-repeat: no-repeat; background-size: 1.2em; }
+        .floating-input input, .standard-input { width: 100%; padding: 22px 14px 8px 14px; border: 2px solid var(--border); border-radius: 12px; font-size: 1.05rem; font-weight: 700; color: var(--text-main); background-color: var(--input-bg); transition: all 0.2s ease; appearance: none; font-variant-numeric: tabular-nums; outline: none; }
         
+        .standard-input { padding: 14px; font-size: 0.95rem; }
+        .standard-label { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: block; }
+
         .floating-input label { position: absolute; top: 16px; left: 14px; color: var(--text-muted); font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; pointer-events: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .floating-input input:focus, .styled-select:focus { border-color: var(--primary); background-color: var(--card-bg); box-shadow: 0 4px 12px rgba(225, 29, 72, 0.05); }
+        .floating-input input:focus, .standard-input:focus { border-color: var(--primary); background-color: var(--card-bg); box-shadow: 0 4px 12px rgba(225, 29, 72, 0.05); }
         .floating-input input.error { border-color: var(--primary); background-color: #FFF1F2; }
         
         .floating-input input:focus ~ label, .floating-input input:not(:placeholder-shown) ~ label { top: 6px; font-size: 0.65rem; color: var(--primary); }
 
-        .input-title { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; }
+        .input-title { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;}
 
         .segmented-control { display: flex; gap: 4px; width: 100%; background: var(--input-bg); padding: 4px; border-radius: 12px; border: 1px solid var(--border); }
-        .segmented-control input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
-        .segmented-control label.segment-btn { flex: 1; text-align: center; padding: 10px 4px; background: transparent; border-radius: 8px; font-weight: 700; font-size: 0.95rem; color: var(--text-muted); cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); margin: 0; }
-        .segmented-control input[type="radio"]:checked + label.segment-btn { background: var(--card-bg); color: var(--text-main); box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid var(--border); transform: scale(1.02); }
+        .segmented-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: var(--input-bg); padding: 4px; border-radius: 12px; border: 1px solid var(--border); }
+        .segmented-control input[type="radio"], .segmented-grid input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+        .segment-btn { flex: 1; text-align: center; padding: 10px 2px; background: transparent; border-radius: 8px; font-weight: 700; font-size: 0.9rem; color: var(--text-muted); cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); margin: 0; }
+        input[type="radio"]:checked + label.segment-btn { background: var(--card-bg); color: var(--text-main); box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid var(--border); transform: scale(1.02); }
 
         .checkbox-group { display: flex; align-items: center; padding: 12px 0; cursor: pointer; }
         .checkbox-group input { width: 22px; height: 22px; margin-right: 14px; accent-color: var(--primary); cursor: pointer; }
@@ -142,22 +145,29 @@
                     <input type="number" id="innerPages" min="1" placeholder=" ">
                     <label>Total Inner Pages</label>
                 </div>
+                
                 <div>
-                    <span class="input-title" style="margin-bottom:8px;">Inner Paper Material</span>
-                    <select id="paperGsmMat" class="styled-select">
-                        <option value="70 GSM Natural Shade (NS)" selected>70 GSM Natural Shade (NS)</option>
-                        <option value="80 GSM Natural Shade (NS)">80 GSM Natural Shade (NS)</option>
-                        <option value="100 GSM Natural Shade (NS)">100 GSM Natural Shade (NS)</option>
-                        <option value="120 GSM Natural Shade (NS)">120 GSM Natural Shade (NS)</option>
-                        <option value="70 GSM Maplitho">70 GSM Maplitho</option>
-                        <option value="80 GSM Maplitho">80 GSM Maplitho</option>
-                        <option value="100 GSM Maplitho">100 GSM Maplitho</option>
-                        <option value="120 GSM Maplitho">120 GSM Maplitho</option>
-                    </select>
+                    <span class="input-title">Inner Paper Material</span>
+                    <div class="segmented-control" style="margin-bottom: 6px;">
+                        <input type="radio" id="typeNS" name="paperType" value="Natural Shade (NS)" checked>
+                        <label for="typeNS" class="segment-btn">Natural Shade (NS)</label>
+                        <input type="radio" id="typeMap" name="paperType" value="Maplitho">
+                        <label for="typeMap" class="segment-btn">Maplitho</label>
+                    </div>
+                    <div class="segmented-control">
+                        <input type="radio" id="gsm70" name="paperGsm" value="70" checked>
+                        <label for="gsm70" class="segment-btn">70 GSM</label>
+                        <input type="radio" id="gsm80" name="paperGsm" value="80">
+                        <label for="gsm80" class="segment-btn">80 GSM</label>
+                        <input type="radio" id="gsm100" name="paperGsm" value="100">
+                        <label for="gsm100" class="segment-btn">100 GSM</label>
+                        <input type="radio" id="gsm120" name="paperGsm" value="120">
+                        <label for="gsm120" class="segment-btn">120 GSM</label>
+                    </div>
                 </div>
                 
                 <div>
-                    <span class="input-title" style="margin-bottom:8px;">Printing Type</span>
+                    <span class="input-title">Printing Type</span>
                     <div class="segmented-control">
                         <input type="radio" id="printBw" name="printType" value="Printed" checked>
                         <label for="printBw" class="segment-btn">Black Ink Print</label>
@@ -186,17 +196,24 @@
             <h2 class="card-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg> 3. Exterior Layer</h2>
             <div class="form-grid">
                 <div>
-                    <span class="input-title" style="margin-bottom:8px;">Binding Style</span>
-                    <select id="bindingStyle" class="styled-select">
-                        <option value="Perfect Binding" selected>Perfect Binding</option>
-                        <option value="Spiral Binding">Spiral Binding</option>
-                        <option value="Centre Stapling">Centre Stapling</option>
-                        <option value="Hardbinding">Hardbinding</option>
-                    </select>
+                    <span class="input-title">Binding Style</span>
+                    <div class="segmented-grid">
+                        <input type="radio" id="bindPerfect" name="bindingStyle" value="Perfect Binding" checked>
+                        <label for="bindPerfect" class="segment-btn">Perfect</label>
+                        
+                        <input type="radio" id="bindSpiral" name="bindingStyle" value="Spiral Binding">
+                        <label for="bindSpiral" class="segment-btn">Spiral</label>
+                        
+                        <input type="radio" id="bindStaple" name="bindingStyle" value="Centre Stapling">
+                        <label for="bindStaple" class="segment-btn">Stapling</label>
+                        
+                        <input type="radio" id="bindHard" name="bindingStyle" value="Hardbinding">
+                        <label for="bindHard" class="segment-btn">Hardbound</label>
+                    </div>
                 </div>
                 
                 <div>
-                    <span class="input-title" style="margin-bottom:8px;">Cover Paper</span>
+                    <span class="input-title">Cover Paper</span>
                     <div class="segmented-control">
                         <input type="radio" id="cover250" name="coverGsm" value="250 GSM" checked>
                         <label for="cover250" class="segment-btn">250 GSM</label>
@@ -206,7 +223,7 @@
                 </div>
 
                 <div>
-                    <span class="input-title" style="margin-bottom:8px;">Lamination</span>
+                    <span class="input-title">Lamination</span>
                     <div class="segmented-control">
                         <input type="radio" id="lamMatt" name="lamination" value="Matt" checked>
                         <label for="lamMatt" class="segment-btn">Matt</label>
@@ -238,10 +255,22 @@
                     </label>
                     
                     <div class="form-grid grid-half" style="margin: 12px 0;">
-                        <div class="floating-input"><input type="number" id="designPages" placeholder=" "><label>Custom Design</label></div>
-                        <div class="floating-input"><input type="number" id="layoutPages" placeholder=" "><label>Basic Layout</label></div>
-                        <div class="floating-input"><input type="number" id="dtpPages" placeholder=" "><label>DTP (Pgs)</label></div>
-                        <div class="floating-input"><input type="number" id="proofPages" placeholder=" "><label>Proofing (Pgs)</label></div>
+                        <div>
+                            <span class="standard-label">Custom Design (Pgs)</span>
+                            <input type="number" id="designPages" class="standard-input" placeholder="0">
+                        </div>
+                        <div>
+                            <span class="standard-label">Basic Layout (Pgs)</span>
+                            <input type="number" id="layoutPages" class="standard-input" placeholder="0">
+                        </div>
+                        <div>
+                            <span class="standard-label">DTP (Pgs)</span>
+                            <input type="number" id="dtpPages" class="standard-input" placeholder="0">
+                        </div>
+                        <div>
+                            <span class="standard-label">Proofing (Pgs)</span>
+                            <input type="number" id="proofPages" class="standard-input" placeholder="0">
+                        </div>
                     </div>
                     
                     <label class="checkbox-group" style="border-top: 1px dashed var(--border);">
@@ -306,7 +335,7 @@
     let debounceTimer;
 
     window.onload = function() { 
-        document.querySelectorAll('input, select').forEach(i => i.addEventListener('input', triggerDebounce)); 
+        document.querySelectorAll('input').forEach(i => i.addEventListener('input', triggerDebounce)); 
         document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(i => i.addEventListener('change', triggerDebounce));
         document.querySelectorAll('input[name="masterSize"]').forEach(i => i.addEventListener('change', updateDimHint));
         updateDimHint();
@@ -402,14 +431,18 @@
 
         const masterSize = document.querySelector('input[name="masterSize"]:checked').value;
         const printType = document.querySelector('input[name="printType"]:checked').value;
+        const bindingStyle = document.querySelector('input[name="bindingStyle"]:checked').value;
+        const paperType = document.querySelector('input[name="paperType"]:checked').value;
+        const paperGsm = document.querySelector('input[name="paperGsm"]:checked').value;
+        const innerMatString = `${paperGsm} GSM ${paperType}`;
         
         let data = { 
             bookQty, masterSize, innerPages, 
             dimensions: DIMENSIONS[masterSize][currentDimFormat],
             colorPages: document.getElementById('toggleColour').checked ? getVal('colorPages') : 0, 
-            innerMatString: document.getElementById('paperGsmMat').value,
+            innerMatString: innerMatString,
             printType: printType, 
-            bindingStyle: document.getElementById('bindingStyle').value, 
+            bindingStyle: bindingStyle, 
             coverGsm: document.querySelector('input[name="coverGsm"]:checked').value,
             lamination: document.querySelector('input[name="lamination"]:checked').value,
             isEmergency: document.getElementById('emergencyCharge').checked,
@@ -443,12 +476,14 @@
         data.totals.items.push({ name: `Production (${bookQty} × ₹${fmt(data.perBook.total)})`, cost: data.perBook.total * bookQty });
         let subTotal = data.totals.items[0].cost;
 
-        if (document.getElementById('coverDesign').checked) data.flatFees.items.push({ name: `Cover Design`, cost: PRICING.design.cover });
-        let dP = getVal('designPages'); if (dP > 0) data.flatFees.items.push({ name: `Inner Design`, cost: dP * PRICING.design.inner[masterSize] });
-        let lP = getVal('layoutPages'); if (lP > 0) data.flatFees.items.push({ name: `Basic Layout`, cost: lP * PRICING.design.basicLayout });
-        let dtP = getVal('dtpPages'); if (dtP > 0) data.flatFees.items.push({ name: `DTP`, cost: dtP * PRICING.design.dtp });
-        let pP = getVal('proofPages'); if (pP > 0) data.flatFees.items.push({ name: `Proofreading`, cost: pP * PRICING.design.proofing });
-        if (document.getElementById('publishingPkg').checked) data.flatFees.items.push({ name: `Publishing Package`, cost: PRICING.publishing });
+        if (document.getElementById('toggleDesign').checked) {
+            if (document.getElementById('coverDesign').checked) data.flatFees.items.push({ name: `Cover Design`, cost: PRICING.design.cover });
+            let dP = getVal('designPages'); if (dP > 0) data.flatFees.items.push({ name: `Inner Design`, cost: dP * PRICING.design.inner[masterSize] });
+            let lP = getVal('layoutPages'); if (lP > 0) data.flatFees.items.push({ name: `Basic Layout`, cost: lP * PRICING.design.basicLayout });
+            let dtP = getVal('dtpPages'); if (dtP > 0) data.flatFees.items.push({ name: `DTP`, cost: dtP * PRICING.design.dtp });
+            let pP = getVal('proofPages'); if (pP > 0) data.flatFees.items.push({ name: `Proofreading`, cost: pP * PRICING.design.proofing });
+            if (document.getElementById('publishingPkg').checked) data.flatFees.items.push({ name: `Publishing Package`, cost: PRICING.publishing });
+        }
 
         data.flatFees.items.forEach(i => { data.totals.items.push(i); subTotal += i.cost; });
 
@@ -500,8 +535,8 @@
 
             if (d.isEmergency) t += `\n*Turnaround: Emergency Priority (+25%)*\n`;
             
-            t += `\n*Per Book Rate: ₹${fmt(d.perBook.total)}/-\*\n`;
-            t += `\n*Grand Total: ₹${fmt(d.totals.grandTotal)}/-\*\n\n`;
+            t += `\n*Per Book Rate: ₹${fmt(d.perBook.total)}/-*\n`;
+            t += `\n*Grand Total: ₹${fmt(d.totals.grandTotal)}/-*\n\n`;
             
             t += `*Terms & Conditions:*\n`;
             t += `• As per schedule work will get 3-5 days.\n`;
@@ -516,9 +551,11 @@
         }
         
         if (navigator.share) {
-            navigator.share({ title: 'Quotation', text: t }).catch(console.error);
+            navigator.share({ title: 'Quotation', text: t }).catch(() => {
+                window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank');
+            });
         } else {
-            navigator.clipboard.writeText(t).then(() => showToast("Quote copied! Paste in WhatsApp."));
+            window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank');
         }
     }
 </script>
