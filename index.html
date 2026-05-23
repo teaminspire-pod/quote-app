@@ -23,13 +23,11 @@
         body { background-color: var(--bg-color); color: var(--text-main); padding: 16px; line-height: 1.45; -webkit-font-smoothing: antialiased; overflow-x: hidden; transition: background-color 0.4s ease; }
         body.offset-mode { background-color: #EFF6FF; --primary: var(--offset-color); --primary-hover: var(--offset-hover); }
 
-        /* Mobile-First Grid */
         #appContainer { display: flex; flex-direction: column; gap: 24px; max-width: var(--app-max-width); margin: 0 auto; padding-bottom: 120px; }
         .input-column { display: flex; flex-direction: column; gap: 16px; }
-        .breakdown-column { display: flex; flex-direction: column; } /* Fully visible on mobile now */
-        .desktop-share-btn { display: none; } /* Hidden on mobile */
+        .breakdown-column { display: flex; flex-direction: column; } 
+        .desktop-share-btn { display: none; } 
         
-        /* Desktop Split Architecture */
         @media (min-width: 1024px) {
             body { padding: 32px; }
             #appContainer { display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; padding-bottom: 0; }
@@ -51,7 +49,6 @@
         .card:nth-child(4) { animation-delay: 0.3s; }
         @keyframes slideUpFade { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Premium Icon Architecture */
         .card-header { display: flex; align-items: center; gap: 12px; font-size: 0.95rem; font-weight: 800; color: var(--text-main); border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
         .card-header-icon { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: rgba(225, 29, 72, 0.08); color: var(--primary); border-radius: 8px; transition: all 0.4s ease; border: 1px solid rgba(225, 29, 72, 0.1); }
         .card-header-icon svg { width: 18px; height: 18px; stroke-width: 1.75; }
@@ -105,7 +102,6 @@
         .drawer.open { grid-template-rows: 1fr; margin-top: 8px; }
         .drawer.open .drawer-inner { opacity: 1; padding-top: 8px; }
 
-        /* Breakdown UI */
         .breakdown-card { background: var(--card-bg); border-radius: 16px; padding: 24px; border: 2px solid var(--primary); box-shadow: 0 10px 40px rgba(225, 29, 72, 0.08); transition: all 0.4s ease; display: flex; flex-direction: column; height: 100%; max-height: calc(100vh - 64px); }
         .offset-mode .breakdown-card { border-color: var(--offset-color); box-shadow: 0 10px 40px rgba(59, 130, 246, 0.1); }
         .breakdown-title { font-size: 0.8rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px dashed var(--border); padding-bottom: 12px; margin-bottom: 16px; }
@@ -141,7 +137,6 @@
         .btn-share.is-success .check-icon { opacity: 1; transform: translateY(0); }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Mobile Action Bar */
         .mobile-action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(226, 232, 240, 0.8); padding: 16px 16px 24px 16px; z-index: 100; box-shadow: 0 -10px 40px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 12px; }
         .mobile-action-bar .grand-total-row { display: flex; justify-content: space-between; align-items: center; }
 
@@ -376,6 +371,7 @@
                 <span class="grand-total-label">Estimated Grand Total</span>
                 <span class="grand-total-value" id="grandTotalDisplayDesk">₹0</span>
             </div>
+            
             <button class="btn-share shareActionBtn desktop-share-btn">
                 <span class="btn-text">Generate & Share Quote</span>
                 <span class="spinner"></span>
@@ -494,7 +490,7 @@
         
         const shareBtns = document.querySelectorAll('.shareActionBtn');
         
-        // 1. Offset Mode & MOQ Locks
+        // Offset Mode & MOQ Locks
         if (qty < 4) {
             qtyInput.classList.add('input-error');
             document.body.classList.remove('offset-mode');
@@ -529,7 +525,6 @@
         const colorInput = document.getElementById('colorPages');
         let colorPages = colorChecked ? (parseInt(colorInput.value) || 0) : 0;
         
-        // 2. Color Pages Over-ride Logic
         if (colorPages > innerPages) { 
             colorPages = innerPages; 
             colorInput.value = innerPages;
@@ -544,7 +539,6 @@
         const bindingStyle = document.querySelector('input[name="bindingStyle"]:checked').value;
         const emergency = document.getElementById('emergencyCharge').checked;
 
-        // 3. Manufacturing Math
         const paperKey = `${paperGsm} GSM ${paperType}`;
         const mappedPrint = (printType === "Black & White") ? "Printed" : "Plain";
         const a5Rate = A5_RATES[paperKey][mappedPrint];
@@ -567,57 +561,60 @@
 
         const mfgSubtotal = innerTotalPerBook + coverCostPerBook + bindingCostPerBook;
         const emergencySurcharge = emergency ? (mfgSubtotal * 0.25) : 0;
-        
-        // Final Manufacturing cost per book
         const perBookFinal = mfgSubtotal + emergencySurcharge;
         const totalManufacturing = perBookFinal * qty;
 
-        // 4. Pre-Press & Design Flat Fees
+        // FIXED PRE-PRESS LOGIC (Independent Stacking)
         let totalDesign = 0;
         let designLinesHTML = '';
         let designActive = document.getElementById('toggleDesign').checked;
         let pckgActive = document.getElementById('pubPackage').checked;
         let cvrActive = document.getElementById('coverDesign').checked;
+        let customPgs = 0, layoutPgs = 0, dtpPgs = 0, proofPgs = 0;
         
         if (designActive) {
+            
             if (pckgActive) {
                 totalDesign += PRICING.publishing;
                 designLinesHTML += `<div class="bd-row bd-indent"><span class="bd-label">Publishing Package</span><span class="bd-value">₹${PRICING.publishing}</span></div>`;
-            } else {
-                if (cvrActive) {
-                    totalDesign += PRICING.design.cover;
-                    designLinesHTML += `<div class="bd-row bd-indent"><span class="bd-label">Cover Design</span><span class="bd-value">₹${PRICING.design.cover}</span></div>`;
-                }
-                const customPgs = parseInt(document.getElementById('designPages').value) || 0;
-                if (customPgs > 0) {
-                    let cost = customPgs * PRICING.design.inner[size];
-                    totalDesign += cost;
-                    designLinesHTML += `<div class="bd-row bd-indent"><span class="bd-label">Custom Layout (${customPgs})</span><span class="bd-value">₹${cost}</span></div>`;
-                }
-                const layoutPgs = parseInt(document.getElementById('layoutPages').value) || 0;
-                if (layoutPgs > 0) {
-                    let cost = layoutPgs * PRICING.design.basicLayout;
-                    totalDesign += cost;
-                    designLinesHTML += `<div class="bd-row bd-indent"><span class="bd-label">Basic Layout (${layoutPgs})</span><span class="bd-value">₹${cost}</span></div>`;
-                }
-                const dtpPgs = parseInt(document.getElementById('dtpPages').value) || 0;
-                if (dtpPgs > 0) {
-                    let cost = dtpPgs * PRICING.design.dtp;
-                    totalDesign += cost;
-                    designLinesHTML += `<div class="bd-row bd-indent"><span class="bd-label">DTP (${dtpPgs})</span><span class="bd-value">₹${cost}</span></div>`;
-                }
-                const proofPgs = parseInt(document.getElementById('proofingPages').value) || 0;
-                if (proofPgs > 0) {
-                    let cost = proofPgs * PRICING.design.proofing;
-                    totalDesign += cost;
-                    designLinesHTML += `<div class="bd-row bd-indent"><span class="bd-label">Proof Reading (${proofPgs})</span><span class="bd-value">₹${cost}</span></div>`;
-                }
+            }
+            
+            if (cvrActive) {
+                totalDesign += PRICING.design.cover;
+                designLinesHTML += `<div class="bd-row bd-indent"><span class="bd-label">Cover Design</span><span class="bd-value">₹${PRICING.design.cover}</span></div>`;
+            }
+
+            customPgs = parseInt(document.getElementById('designPages').value) || 0;
+            if (customPgs > 0) {
+                let cost = customPgs * PRICING.design.inner[size];
+                totalDesign += cost;
+                designLinesHTML += `<div class="bd-row bd-indent"><span class="bd-label">Custom Layout (${customPgs})</span><span class="bd-value">₹${cost}</span></div>`;
+            }
+
+            layoutPgs = parseInt(document.getElementById('layoutPages').value) || 0;
+            if (layoutPgs > 0) {
+                let cost = layoutPgs * PRICING.design.basicLayout;
+                totalDesign += cost;
+                designLinesHTML += `<div class="bd-row bd-indent"><span class="bd-label">Basic Layout (${layoutPgs})</span><span class="bd-value">₹${cost}</span></div>`;
+            }
+
+            dtpPgs = parseInt(document.getElementById('dtpPages').value) || 0;
+            if (dtpPgs > 0) {
+                let cost = dtpPgs * PRICING.design.dtp;
+                totalDesign += cost;
+                designLinesHTML += `<div class="bd-row bd-indent"><span class="bd-label">DTP (${dtpPgs})</span><span class="bd-value">₹${cost}</span></div>`;
+            }
+
+            proofPgs = parseInt(document.getElementById('proofingPages').value) || 0;
+            if (proofPgs > 0) {
+                let cost = proofPgs * PRICING.design.proofing;
+                totalDesign += cost;
+                designLinesHTML += `<div class="bd-row bd-indent"><span class="bd-label">Proof Reading (${proofPgs})</span><span class="bd-value">₹${cost}</span></div>`;
             }
         }
 
         const grandTotal = totalManufacturing + totalDesign;
 
-        // 5. Internal Breakdown Generation
         let bdHtml = `
             <div class="bd-row"><span class="bd-label">Inner Pgs (${bwPages} B&W, ${colorPages} Col)</span><span class="bd-value">₹${innerTotalPerBook.toFixed(2)}</span></div>
             <div class="bd-row"><span class="bd-label">Cover (${size})</span><span class="bd-value">₹${coverCostPerBook.toFixed(2)}</span></div>
@@ -640,8 +637,8 @@
             coverGsm: document.querySelector('input[name="coverGsm"]:checked').value,
             lamination: document.querySelector('input[name="lamination"]:checked').value,
             emergency, designActive, pckgActive, cvrActive,
-            hasCustomItems: designLinesHTML.length > 0,
-            perBookMfgRate: perBookFinal.toFixed(2), // Strict isolation
+            customPgs, layoutPgs, dtpPgs, proofPgs,
+            perBookMfgRate: perBookFinal.toFixed(2), 
             totalDesignFees: totalDesign,
             grandTotal: grandTotal
         };
@@ -730,7 +727,6 @@
         const btns = document.querySelectorAll('.shareActionBtn');
         btns.forEach(b => b.classList.add('is-loading'));
         
-        // 6. Sanitized Export Generation
         let msg = `*Team Inspire Digital Media Pod*\n*Quotation*\n\n`;
         msg += `*Specifications:*\n`;
         msg += `Book Size: ${exportData.sizeText}\n`;
@@ -746,14 +742,19 @@
 
         msg += `*Per Book Rate: ₹${exportData.perBookMfgRate}/-*\n\n`;
 
+        // FIXED PRE-PRESS WHATSAPP EXPORT LOGIC
         if (exportData.designActive) {
             msg += `*Design & Publishing Services:*\n`;
-            if (exportData.pckgActive) msg += `• Publishing Package Included\n`;
-            else if (exportData.cvrActive) msg += `• Cover Design Generation\n`;
-            else if (exportData.hasCustomItems) msg += `• Custom Pre-Press Layout Applied\n`;
             
-            // Explicitly isolate flat fees to avoid rate confusion
-            msg += `_One-Time Service Fees: ₹${exportData.totalDesignFees.toLocaleString('en-IN')}/-_\n\n`;
+            if (exportData.pckgActive) msg += `• Publishing Package Included\n`;
+            if (exportData.cvrActive) msg += `• Cover Design Generation\n`;
+            
+            if (exportData.customPgs > 0) msg += `• Custom Layout (${exportData.customPgs} Pgs)\n`;
+            if (exportData.layoutPgs > 0) msg += `• Basic Layout (${exportData.layoutPgs} Pgs)\n`;
+            if (exportData.dtpPgs > 0) msg += `• DTP (${exportData.dtpPgs} Pgs)\n`;
+            if (exportData.proofPgs > 0) msg += `• Proof Reading (${exportData.proofPgs} Pgs)\n`;
+            
+            msg += `\n_One-Time Service Fees: ₹${exportData.totalDesignFees.toLocaleString('en-IN')}/-_\n\n`;
         }
 
         msg += `*Grand Total: ₹${exportData.grandTotal.toLocaleString('en-IN')}/-*\n\n`;
@@ -790,4 +791,4 @@
     }
 </script>
 </body>
-  </html>
+    </html>
