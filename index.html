@@ -190,9 +190,31 @@
                     </div>
                 </div>
                 <label class="checkbox-group" style="margin-top: 8px; border-top: 1px dashed var(--border); padding-top: 16px;">
-                    <input type="checkbox" id="emergencyCharge">
+                    <input type="checkbox" id="emergencyCharge" onchange="calculateQuotation()">
                     <span style="color: var(--primary);">Emergency Delivery (+25%)</span>
                 </label>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> 4. Design & Publishing</h2>
+            <label class="checkbox-group">
+                <input type="checkbox" id="toggleDesign" onchange="toggleDrawer('designDrawer', this.checked); resetDesignInputs();">
+                <span>Enable Design Services</span>
+            </label>
+            <div id="designDrawer" class="drawer">
+                <div>
+                    <div style="padding-top: 16px;">
+                        <label class="checkbox-group"><input type="checkbox" id="coverDesign"><span>Include Cover Design</span></label>
+                        <div class="form-grid" style="margin-top: 12px; margin-bottom: 24px;">
+                            <div class="input-group"><label>Inner Design (Pages)</label><input type="number" id="designPages" min="0" placeholder="0"></div>
+                            <div class="input-group"><label>Basic Layout (Pages)</label><input type="number" id="layoutPages" min="0" placeholder="0"></div>
+                            <div class="input-group"><label>DTP (Pages)</label><input type="number" id="dtpPages" min="0" placeholder="0"></div>
+                            <div class="input-group"><label>Proofreading (Pages)</label><input type="number" id="proofPages" min="0" placeholder="0"></div>
+                        </div>
+                        <label class="checkbox-group" style="border-top: 1px dashed var(--border); padding-top: 16px;"><input type="checkbox" id="publishingPkg"><span>Full Publishing Package</span></label>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
@@ -232,7 +254,9 @@
             "Perfect Binding": { "A6": 4.00, "A5": 5.00, "A4": 8.00 },
             "Spiral Binding": { "A6": 4.00, "A5": 5.00, "A4": 8.00 }
         },
-        hardBindingTiers: [ { max: 100, rate: 140 }, { max: 200, rate: 90 }, { max: 300, rate: 85 }, { max: 1000, rate: 72 } ]
+        hardBindingTiers: [ { max: 100, rate: 140 }, { max: 200, rate: 90 }, { max: 300, rate: 85 }, { max: 1000, rate: 72 } ],
+        design: { cover: 2500, inner: { "A6": 175, "A5": 350, "A4": 450 }, basicLayout: 35, dtp: 25, proofing: 30 }, 
+        publishing: 3500 
     };
 
     let globalQuoteData = null; 
@@ -247,7 +271,24 @@
 
     function showToast(msg) { const t = document.getElementById('toast'); document.getElementById('toastMsg').innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
     function toggleDrawer(id, isOpen) { document.getElementById(id).classList.toggle('open', isOpen); calculateQuotation(); }
-    function resetApp() { document.getElementById('quoteForm').reset(); document.getElementById('colourDrawer').classList.remove('open'); calculateQuotation(); document.getElementById('bookQty').focus(); updateDimHint(); showToast("Form cleared."); }
+    
+    function resetDesignInputs() { 
+        document.getElementById('coverDesign').checked = false; 
+        document.getElementById('publishingPkg').checked = false; 
+        ['designPages','layoutPages','dtpPages','proofPages'].forEach(id => document.getElementById(id).value = ''); 
+        calculateQuotation();
+    }
+
+    function resetApp() { 
+        document.getElementById('quoteForm').reset(); 
+        document.getElementById('colourDrawer').classList.remove('open'); 
+        document.getElementById('designDrawer').classList.remove('open');
+        calculateQuotation(); 
+        document.getElementById('bookQty').focus(); 
+        updateDimHint(); 
+        showToast("Form cleared."); 
+    }
+    
     const fmt = (num) => Number.isInteger(num) ? num : num.toFixed(2);
 
     function toggleDimFormat() {
@@ -327,7 +368,8 @@
             lamination: getRadio('lamination'),
             isEmergency: document.getElementById('emergencyCharge').checked,
             perBook: { items: [], total: 0 }, 
-            totals: { items: [], grandTotal: 0 } 
+            totals: { items: [], grandTotal: 0 },
+            flatFees: { items: [] }
         };
         
         // Inner Pages Math
@@ -365,8 +407,25 @@
         data.perBook.total = data.perBook.items.reduce((s, i) => s + i.cost, 0);
         data.totals.items.push({ name: `Production Total (${bookQty} Books × ₹${fmt(data.perBook.total)})`, cost: data.perBook.total * bookQty });
         
+        let subTotal = data.totals.items[0].cost;
+
+        // Design Flat Fees
+        if (document.getElementById('coverDesign').checked) data.flatFees.items.push({ name: `Cover Design`, cost: PRICING.design.cover });
+        let dP = getVal('designPages'); if (dP > 0) data.flatFees.items.push({ name: `Inner Design`, cost: dP * PRICING.design.inner[masterSize] });
+        let lP = getVal('layoutPages'); if (lP > 0) data.flatFees.items.push({ name: `Basic Layout`, cost: lP * PRICING.design.basicLayout });
+        let dtP = getVal('dtpPages'); if (dtP > 0) data.flatFees.items.push({ name: `DTP`, cost: dtP * PRICING.design.dtp });
+        let pP = getVal('proofPages'); if (pP > 0) data.flatFees.items.push({ name: `Proofreading`, cost: pP * PRICING.design.proofing });
+        if (document.getElementById('publishingPkg').checked) {
+            data.flatFees.items.push({ name: `Publishing Package`, cost: PRICING.publishing });
+            if (bookQty < 100) showToast("Note: Publishing normally requires 100 MOQ.");
+        }
+
+        data.flatFees.items.forEach(i => {
+            data.totals.items.push(i);
+            subTotal += i.cost;
+        });
+
         // Emergency Surcharge
-        let subTotal = data.totals.items.reduce((s, i) => s + i.cost, 0);
         if (data.isEmergency) {
             let emergencyFee = subTotal * 0.25;
             data.totals.items.push({ name: `Emergency Delivery (+25%)`, cost: emergencyFee });
@@ -408,7 +467,13 @@
             t = `*Team Inspire Digital Media Pod*\n*Quotation*\n\n*Specifications:*\nBook Size: ${d.masterSize} (${d.dimensions})\nQuantity: ${d.bookQty} Books\nInner Pages: ${d.innerPages} Pages\n`; 
             if (d.colorPages > 0) t += `Colour Pages: ${d.colorPages} Pages\n`; 
             t += `Inner Paper: ${d.innerMatString}\nPrinting: ${d.printType === 'Printed' ? 'Black Ink Print' : 'Plain (No Ink)'}\nCover Paper: ${d.coverGsm} Art Paper\nLamination: ${d.lamination}\nBinding: ${d.bindingStyle}\n`;
-            if (d.isEmergency) t += `Turnaround: Emergency Priority (+25%)\n`;
+            
+            if (d.flatFees.items.length > 0) {
+                t += `\n*Design & Publishing Services:*\n`;
+                d.flatFees.items.forEach(i => t += `• ${i.name} Included\n`);
+            }
+
+            if (d.isEmergency) t += `\n*Turnaround: Emergency Priority (+25%)*\n`;
             
             t += `\n*Per Book Rate: ₹${fmt(d.perBook.total)}/-\*\n`;
             t += `\n*Grand Total: ₹${fmt(d.totals.grandTotal)}/-\*\n\n`;
@@ -425,7 +490,6 @@
             t += `Mail: teaminspirepod@gmail.com\nPh: +91 90371 16229`; 
         }
         
-        // Native Share API to allow routing to WA Business or Standard WA
         if (navigator.share) {
             navigator.share({ title: 'Quotation', text: t }).catch(console.error);
         } else {
