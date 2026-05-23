@@ -323,7 +323,7 @@
                         <div class="radio-inline-group">
                             <label class="radio-label"><input type="radio" name="bindingStyle" value="Perfect Binding" checked><span class="radio-custom"></span> Perfect</label>
                             <label class="radio-label"><input type="radio" name="bindingStyle" value="Spiral Binding"><span class="radio-custom"></span> Spiral</label>
-                            <label class="radio-label"><input type="radio" name="bindingStyle" value="Centre Stapling"><span class="radio-custom"></span> Stapling</label>
+                            <label class="radio-label"><input type="radio" name="bindingStyle" value="Centre Stapling"><span class="radio-custom"></span> Centre Stapling</label>
                             <label class="radio-label"><input type="radio" name="bindingStyle" value="Hardbinding"><span class="radio-custom"></span> Hardbinding</label>
                         </div>
                     </div>
@@ -559,6 +559,13 @@
             if(e.target.classList.contains('print-type-cb')) {
                 renderPrintInputs();
             }
+
+            if(
+                e.target.name === 'paperType' ||
+                e.target.classList.contains('print-type-cb')
+            ){
+                setTimeout(renderPrintInputs, 0);
+            }
             handlePaperLogic();
             triggerDebounce(); 
             saveDraft(); 
@@ -639,7 +646,38 @@ function handlePaperLogic() {
             }
         }
 
-        // ART PAPER GSM LOGIC
+        
+        // ART PAPER PRINT TYPE LOCK
+        const bwCb = document.querySelector('.print-type-cb[value="Black & White"]');
+        const plainCb = document.querySelector('.print-type-cb[value="Plain (without print)"]');
+        const multiCb = document.querySelector('.print-type-cb[value="Multi Color"]');
+
+        const bwLabel = bwCb.closest('.checkbox-group');
+        const plainLabel = plainCb.closest('.checkbox-group');
+
+        if (typeArtInput.checked) {
+
+            if (!multiCb.checked) multiCb.checked = true;
+
+            bwCb.checked = false;
+            plainCb.checked = false;
+
+            bwCb.disabled = true;
+            plainCb.disabled = true;
+
+            bwLabel.classList.add('smooth-hidden');
+            plainLabel.classList.add('smooth-hidden');
+
+        } else {
+
+            bwCb.disabled = false;
+            plainCb.disabled = false;
+
+            bwLabel.classList.remove('smooth-hidden');
+            plainLabel.classList.remove('smooth-hidden');
+        }
+
+// ART PAPER GSM LOGIC
         if (typeArtInput.checked) {
 
             show(gsm130Label);
@@ -957,17 +995,37 @@ function handlePaperLogic() {
         lockState(false);
 
         const selectedCoverGsm = document.querySelector('input[name="coverGsm"]:checked').value;
-        const coverCostPerBook = PRICING.cover[selectedCoverGsm][size];
+
+        let coverCostPerBook = PRICING.cover[selectedCoverGsm][size];
+
+        const laminationType = document.querySelector('input[name="lamination"]:checked').value;
+
+        if (laminationType === "No Lamination") {
+            coverCostPerBook -= 0.50;
+        }
         let bindingCostPerBook = 0;
         
         if (bindingStyle === 'Hardbinding') {
+
             for (let tier of PRICING.hardBindingTiers) {
                 if (qty <= tier.max) {
                     bindingCostPerBook = tier.rate;
                     break;
                 }
             }
+
+        } else if (bindingStyle === 'Perfect Binding' && qty < 100) {
+
+            if (innerPages <= 599) {
+                bindingCostPerBook = 500 / qty;
+            } else if (innerPages <= 1000) {
+                bindingCostPerBook = 600 / qty;
+            } else {
+                bindingCostPerBook = PRICING.binding[bindingStyle][size];
+            }
+
         } else {
+
             bindingCostPerBook = PRICING.binding[bindingStyle][size];
         }
 
