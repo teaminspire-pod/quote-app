@@ -329,7 +329,7 @@
                     <label class="checkbox-group accent-red" style="margin-top: 8px; border-top: 1px dashed var(--border); padding-top: 20px;">
                         <input type="checkbox" id="emergencyCharge">
                         <span class="checkbox-custom"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
-                        <span class="label-text" style="color: var(--primary);">Emergency Priority (+25%)</span>
+                        <span class="label-text" style="color: var(--primary);">Emergency Priority Service (+35%)</span>
                     </label>
                 </div>
             </div>
@@ -688,7 +688,7 @@
         }
 
         const mfgSubtotal = innerTotalPerBook + coverCostPerBook + bindingCostPerBook;
-        const emergencySurcharge = emergency ? (mfgSubtotal * 0.25) : 0;
+        const emergencySurcharge = emergency ? (mfgSubtotal * 0.35) : 0;
         const perBookFinal = mfgSubtotal + emergencySurcharge;
         const totalManufacturing = perBookFinal * qty;
 
@@ -743,13 +743,28 @@
 
         // INTERNAL BREAKDOWN
         let bdHtml = `
-            <div class="bd-row"><span class="bd-label">Inner Core Print</span><span class="bd-value">₹${innerTotalPerBook.toFixed(2)}</span></div>
-            <div class="bd-row"><span class="bd-label">Cover (${size})</span><span class="bd-value">₹${coverCostPerBook.toFixed(2)}</span></div>
-            <div class="bd-row"><span class="bd-label">Binding (${bindingStyle})</span><span class="bd-value">₹${bindingCostPerBook.toFixed(2)}</span></div>
-            <div class="bd-subtotal bd-row"><span class="bd-label">Mfg Subtotal</span><span class="bd-value">₹${mfgSubtotal.toFixed(2)}</span></div>
+            <div class="bd-row">
+                <span class="bd-label">Inner Printing</span>
+                <span class="bd-value">Included</span>
+            </div>
+
+            <div class="bd-row">
+                <span class="bd-label">Cover</span>
+                <span class="bd-value">₹${coverCostPerBook.toFixed(2)}</span>
+            </div>
+
+            <div class="bd-row">
+                <span class="bd-label">Binding</span>
+                <span class="bd-value">₹${bindingCostPerBook.toFixed(2)}</span>
+            </div>
+
+            <div class="bd-subtotal bd-row">
+                <span class="bd-label">Manufacturing Total</span>
+                <span class="bd-value">₹${mfgSubtotal.toFixed(2)}</span>
+            </div>
         `;
         if (emergency) {
-            bdHtml += `<div class="bd-row bd-emergency"><span class="bd-label">Emergency (+25%)</span><span class="bd-value">+₹${emergencySurcharge.toFixed(2)}</span></div>`;
+            bdHtml += `<div class="bd-row bd-emergency"><span class="bd-label">Emergency Priority Service (+35%)</span><span class="bd-value">+₹${emergencySurcharge.toFixed(2)}</span></div>`;
         }
         bdHtml += `<div class="bd-row" style="margin-top:12px; font-weight:800; color:var(--text-main); font-size:1.05rem;"><span class="bd-label">Unit Rate</span><span>₹${perBookFinal.toFixed(2)}</span></div>`;
         bdHtml += `<div style="margin: 20px 0; border-top: 1px dashed var(--border);"></div>`;
@@ -887,7 +902,7 @@
         msg += `Lamination: ${exportData.lamination}\n`;
         msg += `Binding: ${exportData.bindingStyle}\n\n`;
 
-        if (exportData.emergency) msg += `*Turnaround: Emergency Priority (+25%)*\n_(Print will finish in 1 day. If not the 25 percentage is refunded)_\n\n`;
+        if (exportData.emergency) msg += `*Emergency Priority Service (+35%)*\n_(Fast-track production with guaranteed print readiness within 24 hours from order confirmation, followed by same-day dispatch. If we are unable to complete the order within the committed priority timeline, the additional emergency priority charges will be fully refundable.)_\n\n`;
 
         msg += `*Per Book Rate: ₹${exportData.perBookMfgRate}/-*\n\n`;
 
@@ -912,7 +927,7 @@
         msg += `• As per schedule work will get 3-5 days.\n`;
         msg += `• 50% payment advance for work confirmation and balance amount before delivery.\n`;
         msg += `• Parcel and Delivery charge extra paid by customer.\n`;
-        msg += `• For emergency delivery cases 25% additional charge applicable.\n`;
+        msg += `• Emergency Priority Service is available with an additional 35% charge.\n`;
         msg += `• For file issues and spelling mistake or any other editing issue handled by customer.\n`;
         msg += `• Delivery issues like late delivery, sunday/holiday unavailable issues, and all courier issues are not company responsibility. We send parcel as per customer preference.\n`;
         msg += `• Courier charge decide as per delivery reqrement w8 and parcel service. Depend on courier service partners.\n`;
