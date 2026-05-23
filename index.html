@@ -3,83 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <title>Team Inspire | Quotation Engine</title>
     <style>
-        :root { --bg: #FAFAF9; --card: #FFFFFF; --border: #E2E8F0; --text: #1E293B; --muted: #64748B; --primary: #E11D48; --accent: #0F172A; }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding: 12px 12px 200px 12px; }
-        .card { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px -5px rgba(0,0,0,0.04); margin-bottom: 16px; }
-        .card-header { font-size: 0.95rem; font-weight: 800; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 20px; text-transform: uppercase; }
-        .input-title { font-size: 0.7rem; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; display: block; }
-        .segmented-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: var(--border); padding: 4px; border-radius: 12px; }
-        .segment-btn { text-align: center; padding: 10px 4px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; background: transparent; }
-        input[type="radio"]:checked + .segment-btn { background: var(--card); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .bottom-action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(250, 250, 249, 0.95); backdrop-filter: blur(20px); padding: 16px; z-index: 100; border-top: 1px solid var(--border); }
-        .grand-total-value { font-size: 2rem; font-weight: 800; }
-        .btn-share { width: 100%; background-color: var(--accent); color: white; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; }
-        .hidden { display: none; }
+        :root { 
+            --bg-color: #FAFAF9; --card-bg: #FFFFFF; --border: #E2E8F0; --input-bg: #F8FAFC;
+            --text-main: #1E293B; --text-muted: #64748B; --primary: #E11D48; --accent: #0F172A; 
+            --success: #10B981;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        
+        ::-webkit-scrollbar { display: none; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 12px 12px 200px 12px; line-height: 1.45; -webkit-font-smoothing: antialiased; overflow-x: hidden; scrollbar-width: none; }
+        
+        #appContent { display: flex; max-width: 600px; margin: 0 auto; flex-direction: column; gap: 16px; }
+
+        /* 1. Staggered Waterfall Loading */
+        .card { background-color: var(--card-bg); border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px -5px rgba(0,0,0,0.04); animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+        .card:nth-child(1) { animation-delay: 0.0s; }
+        .card:nth-child(2) { animation-delay: 0.1s; }
+        .card:nth-child(3) { animation-delay: 0.2s; }
+        .card:nth-child(4) { animation-delay: 0.3s; }
+        
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+
+        .main-header { display: flex; justify-content: space-between; align-items: flex-end; padding: 12px 4px; margin-bottom: 4px; }
+        .main-header h1 { font-size: 1.25rem; font-weight: 800; color: var(--accent); line-height: 1.2; text-transform: uppercase; letter-spacing: -0.5px; margin: 0; }
+        .reset-btn { background: none; border: none; color: var(--text-muted); font-weight: 800; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.2s; }
+        .reset-btn:hover { color: var(--primary); }
+        
+        .card-header { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; font-weight: 800; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .card-header svg { stroke: var(--accent); width: 18px; height: 18px; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        .grid-half { grid-template-columns: 1fr 1fr; gap: 12px; }
+        
+        .input-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+
+        .floating-input { position: relative; width: 100%; }
+        .floating-input input, .standard-input { width: 100%; padding: 22px 14px 8px 14px; border: 2px solid var(--border); border-radius: 12px; font-size: 1.05rem; font-weight: 700; color: var(--text-main); background-color: var(--input-bg); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); appearance: none; font-variant-numeric: tabular-nums; outline: none; }
+        
+        .standard-input { padding: 14px; font-size: 0.95rem; }
+        .standard-input::placeholder { color: #94A3B8; font-weight: 600; font-size: 0.85rem;}
+        .standard-label { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: block; }
+
+        .floating-input label { position: absolute; top: 16px; left: 14px; color: var(--text-muted); font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; pointer-events: none; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .floating-input input:focus, .standard-input:focus { border-color: var(--primary); background-color: var(--card-bg); box-shadow: 0 4px 15px rgba(225, 29, 72, 0.08); }
+        
+        .floating-input input:focus ~ label, .floating-input input:not(:placeholder-shown) ~ label { top: 6px; font-size: 0.65rem; color: var(--primary); }
+
+        .input-title { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;}
+
+        .segmented-control { display: flex; gap: 4px; width: 100%; background: var(--input-bg); padding: 4px; border-radius: 12px; border: 1px solid var(--border); }
+        .segmented-control input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+        .segment-btn { flex: 1; text-align: center; padding: 10px 2px; background: transparent; border-radius: 8px; font-weight: 700; font-size: 0.9rem; color: var(--text-muted); cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); margin: 0; }
+        input[type="radio"]:checked + label.segment-btn { background: var(--card-bg); color: var(--text-main); box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid var(--border); transform: scale(1.02); }
+
+        /* 2. Liquid Radio Buttons */
+        .radio-inline-group { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+        .radio-label { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; font-weight: 600; color: var(--text-main); cursor: pointer; position: relative; }
+        .radio-label input[type="radio"] { position: absolute; opacity: 0; cursor: pointer; }
+        .radio-custom { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 50%; display: inline-block; position: relative; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); background: var(--input-bg); }
+        .radio-label input:checked ~ .radio-custom { border-color: var(--primary); background: var(--card-bg); }
+        .radio-custom::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 10px; height: 10px; background: var(--primary); border-radius: 50%; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .radio-label input:checked ~ .radio-custom::after { transform: translate(-50%, -50%) scale(1); }
+
+        /* 3. Custom Animated Checkmarks */
+        .checkbox-group { display: flex; align-items: center; padding: 12px 0; cursor: pointer; }
+        .checkbox-group input { position: absolute; opacity: 0; cursor: pointer; }
+        .checkbox-custom { width: 22px; height: 22px; border: 2px solid var(--border); border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); margin-right: 12px; background: var(--input-bg); }
+        .checkbox-group input:checked ~ .checkbox-custom { background: var(--primary); border-color: var(--primary); transform: scale(1.05); }
+        .checkbox-custom svg { width: 14px; height: 14px; fill: none; stroke: white; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 20; stroke-dashoffset: 20; transition: stroke-dashoffset 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s; }
+        .checkbox-group input:checked ~ .checkbox-custom svg { stroke-dashoffset: 0; }
+        .checkbox-group span.label-text { margin-bottom: 0; font-size: 1rem; font-weight: 700; color: var(--accent); cursor: pointer; }
+
+        .drawer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1); margin-top: 0; }
+        .drawer-inner { overflow: hidden; opacity: 0; transition: opacity 0.4s ease; }
+        .drawer.open { grid-template-rows: 1fr; margin-top: 8px; }
+        .drawer.open .drawer-inner { opacity: 1; padding-top: 8px; }
+        
+        /* 4. The Sticky Bar Slide-In */
+        .bottom-action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(250, 250, 249, 0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(226, 232, 240, 0.6); padding: 16px 16px 24px 16px; z-index: 100; box-shadow: 0 -10px 40px rgba(0,0,0,0.05); transform: translateY(120%); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .bottom-action-bar.visible { transform: translateY(0); }
+
+        .grand-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .grand-total-label { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .grand-total-value { font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+        
+        /* 5. Button State Morphing */
+        .btn-share { width: 100%; background-color: var(--accent); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 1.05rem; font-weight: 800; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 15px rgba(15, 23, 42, 0.15); height: 56px; overflow: hidden; position: relative; }
+        .btn-share:active { transform: scale(0.97); }
+        .btn-share.is-loading { background-color: var(--text-muted); pointer-events: none; }
+        .btn-share.is-success { background-color: var(--success); pointer-events: none; }
+        
+        .btn-text, .spinner, .check-icon { transition: all 0.3s ease; position: absolute; }
+        .spinner { width: 22px; height: 22px; border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; animation: spin 0.8s linear infinite; opacity: 0; transform: translateY(20px); }
+        .check-icon { opacity: 0; transform: translateY(20px); font-size: 1.4rem; }
+        
+        .btn-share.is-loading .btn-text { opacity: 0; transform: translateY(-20px); }
+        .btn-share.is-loading .spinner { opacity: 1; transform: translateY(0); }
+        
+        .btn-share.is-success .spinner { opacity: 0; transform: translateY(-20px); }
+        .btn-share.is-success .check-icon { opacity: 1; transform: translateY(0); }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-    <div id="appContent">
-        <form id="quoteForm">
-            <div class="card">
-                <h2 class="card-header">1. Dimensions</h2>
-                <input type="number" id="bookQty" placeholder="Book Quantity (MOQ: 4)" style="width:100%; padding:14px; border:2px solid var(--border); border-radius:12px; margin-bottom:12px;">
-                <div class="segmented-grid">
-                    <input type="radio" id="sA4" name="size" value="A4" class="hidden"><label for="sA4" class="segment-btn">A4</label>
-                    <input type="radio" id="sA5" name="size" value="A5" checked class="hidden"><label for="sA5" class="segment-btn">A5</label>
-                </div>
-            </div>
-            <div class="card">
-                <h2 class="card-header">2. Inner Core</h2>
-                <input type="number" id="innerPages" placeholder="Total Inner Pages" style="width:100%; padding:14px; border:2px solid var(--border); border-radius:12px; margin-bottom:12px;">
-                <span class="input-title">Printing Type</span>
-                <div class="segmented-grid">
-                    <input type="radio" id="pBw" name="print" value="Printed" checked class="hidden"><label for="pBw" class="segment-btn">Black & White</label>
-                    <input type="radio" id="pPl" name="print" value="Plain" class="hidden"><label for="pPl" class="segment-btn">Plain</label>
-                </div>
-            </div>
-            <div class="card">
-                <h2 class="card-header">3. Exterior Layer</h2>
-                <span class="input-title">Binding Style</span>
-                <div class="segmented-grid">
-                    <input type="radio" id="bPerf" name="binding" value="Perfect Binding" checked class="hidden"><label for="bPerf" class="segment-btn">Perfect</label>
-                    <input type="radio" id="bSpiral" name="binding" value="Spiral Binding" class="hidden"><label for="bSpiral" class="segment-btn">Spiral</label>
-                    <input type="radio" id="bStaple" name="binding" value="Centre Stapling" class="hidden"><label for="bStaple" class="segment-btn">Stapling</label>
-                    <input type="radio" id="bHard" name="binding" value="Hardbinding" class="hidden"><label for="bHard" class="segment-btn">Hardbinding</label>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="bottom-action-bar">
-        <div class="grand-total-value" id="grandTotal">₹0</div>
-        <button class="btn-share" onclick="generateOutput()">Share Quote</button>
-    </div>
 
-    <script>
-        // Restored Animation & Logic
-        function animateValue(obj, end) {
-            let start = parseInt(obj.innerText.replace('₹','')) || 0;
-            let range = end - start;
-            let duration = 500;
-            let startTime = null;
-            function step(timestamp) {
-                if (!startTime) startTime = timestamp;
-                let progress = Math.min((timestamp - startTime) / duration, 1);
-                obj.innerText = '₹' + Math.floor(progress * range + start);
-                if (progress < 1) window.requestAnimationFrame(step);
-            }
-            window.requestAnimationFrame(step);
-        }
+<div id="appContent">
+    <header class="main-header">
+        <h1>Quotation Engine</h1>
+        <button onclick="resetApp()" class="reset-btn">Clear Form</button>
+    </header>
 
-        function calculate() {
-            let qty = parseInt(document.getElementById('bookQty').value) || 0;
-            // ... (Add your specific math here) ...
-            animateValue(document.getElementById('grandTotal'), calculatedTotal);
-        }
+    <form id="quoteForm" onchange="handleInteraction()" oninput="handleInteraction()" onsubmit="event.preventDefault();">
         
-        document.querySelectorAll('input').forEach(i => i.addEventListener('input', calculate));
-    </script>
-</body>
-</html>
+        <div class="card">
+            <h2 class="card-header">1. Dimensions</h2>
+            <div class="form-grid">
+                <div class="floating-input">
+                    <input type="number" id="bookQty" min="1" placeholder=" " value="100">
+                    <label>Book Quantity (MOQ: 4)</label>
+                </div>
+                <div>
+                    <div class="input-header">
+                        <span class="input-title" style="margin-bottom:0;">Book Size</span>
+                    </div>
+                    <div class="segmented-control">
+                        <input type="radio" id="sizeA4" name="masterSize" value="A4">
+                        <label for="sizeA4" class="segment-btn">A4</label>
+                        <input type="radio" id="sizeA5" name="masterSize" value="A5" checked>
+                        <label for="sizeA5" class="segment-btn">A5</label>
+                        <input type="radio" id="sizeA6" name="masterSize" value="A6">
+                        <label for="sizeA6" class="segment-btn">A6</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-header">2. Inner Core</h2>
+            <div class="form-grid">
+                <div class="floating-input">
+                    <input type="number" id="innerPages" min="1" placeholder=" " value="100">
+                    <label>Total Inner Pages</label>
+                </div>
+                
+                <div>
+                    <span class="input-title">Inner Paper Material</span>
+                    <div class="segmented-control" style="margin-bottom: 6px;">
+                        <input type="radio" id="typeNS" name="paperType" value="Natural Shade (NS)" checked>
+                        <label for="typeNS" class="segment-btn">Natural Shade (NS)</label>
+                        <input type="radio" id="typeMap" name="paperType" value="Maplitho">
+                        <label for="typeMap" class="segment-btn">Maplitho</label>
+                    </div>
+                    <div class="segmented-control">
+                        <input type="radio" id="gsm70" name="paperGsm" value="70" checked>
+                        <label for="gsm70" class="segment-btn">70 GSM</label>
+                        <input type="radio" id="gsm80" name="paperGsm" value="80">
+                        <label for="gsm80" class="segment-btn">80 GSM</label>
+                        <input type="radio" id="gsm100" name="paperGsm" value="100">
+                        <label for="gsm100" class="segment-btn">100 GSM</label>
+                        <input type="radio" id="gsm120" name="paperGsm" value="120">
+                        <label for="gsm120" class="segment-btn">120 GSM</label>
+                    </div>
+                </div>
+                
+                <div>
+                    <span class="input-title">Printing Type</span>
+                    <div class="segmented-control">
+                        <input type="radio" id="printBw" name="printType" value="Black & White" checked>
+                        <label for="printBw" class="segment-btn">Black & White</label>
+                        <input type="radio" id="printPlain" name="printType" value="Plain">
+                        <label for="printPlain" class="segment-btn">Plain</label>
+                    </div>
+                </div>
+                
+                <label class="checkbox-group" style="margin-top: 8px; border-top: 1px dashed var(--border); padding-top: 16px;">
+                    <input type="checkbox" id="toggleColour" onchange="toggleDrawer('colourDrawer', this.checked)">
+                    <span class="checkbox-custom"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                    <span class="label-text">Add Colour Pages</span>
+                </label>
+                
+                <div id="colourDrawer" class="drawer">
+                    <div class="drawer-inner">
+                        <div class="floating-input">
+                            <input type="number" id="colorPages" min="0" placeholder=" ">
+                            <label>Colour Pages Count</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-header">3. Exterior Layer</h2>
+            <div class="form-grid">
+                <div>
+                    <span class="input-title">Binding Style</span>
+                    <div class="radio-inline-group">
+                        <label class="radio-label">
+                            <input type="radio" name="bindingStyle" value="Perfect Binding">
+                            <span class="radio-custom"></span> Perfect
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="bindingStyle" value="Spiral Binding">
+                            <span class="radio-custom"></span> Spiral
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="bindingStyle" value="Centre Stapling">
+                            <span class="radio-custom"></span> Stapling
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="bindingStyle" value="Hardbinding" checked>
+                            <span class="radio-custom"></span> Hardbinding
+                        </label>
+                    </div>
+                </div>
+                
+                <div>
+                    <span class="input-title">Cover Paper</span>
+                    <div class="segmented-control">
+                        <input type="radio" id="cover250" name="coverGsm" value="250 GSM" checked>
+                        <label for="cover250" class="segment-btn">250 GSM</label>
+                        <input type="radio" id="cover300" name="coverGsm" value="300 GSM">
+                        <label for="cover300" class="segment-btn">300 GSM</label>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="input-title">Lamination</span>
+                    <div class="segmented-control">
+                        <input type="radio" id="lamMatt" name="lamination" value="Matt" checked>
+                        <label for="lamMatt" class="segment-btn">Matt</label>
+                        <input type="radio" id="lamGlossy" name="lamination" value="Glossy">
+                        <label for="lamGlossy" class="segment-btn">Glossy</label>
+                    </div>
+                </div>
+
+                <label class="checkbox-group" style="margin-top: 8px; border-top: 1px dashed var(--border); padding-top: 16px;">
+                    <input type="checkbox" id="emergencyCharge">
+                    <span class="checkbox-custom" style="border-color: var(--primary);"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                    <span class="label-text" style="color: var(--primary);">Emergency Priority (+25%)</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-header">4. Pre-Press Services</h2>
+            
+            <label class="checkbox-group" style="padding-top: 0;">
+                <input type="checkbox" id="toggleDesign" onchange="toggleDrawer('designDrawer', this.checked);">
+                <span class="checkbox-custom"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                <span class="label-text">Enable Design Support</span>
+            </label>
+            
+            <div id="designDrawer" class="drawer">
+                <div class="drawer-inner">
+                    <label class="checkbox-group" style="border-top: 1px dashed var(--border);">
+                        <input type="checkbox" id="pubPackage">
+                        <span class="checkbox-custom"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                        <span class="label-text" style="font-size: 0.95rem; font-weight: 800;">Full Publishing Package</span>
+                    </label>
+
+                    <div class="form-grid grid-half" style="margin: 12px 0;">
+                        <div>
+                            <span class="standard-label">Custom Design</span>
+                            <input type="number" id="designPages" class="standard-input" placeholder="Enter Pages">
+                        </div>
+                        <div>
+                            <span class="standard-label">Basic Layout</span>
+                            <input type="number" id="layoutPages" class="standard-input" placeholder="Enter Pages">
+                        </div>
+                        <div>
+                            <span class="standard-label">DTP (Pgs)</span>
+                            <input type="number" id="dtpPages" class="standard-input" placeholder="Enter Pages">
+    </div>
