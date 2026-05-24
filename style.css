@@ -1,0 +1,300 @@
+
+:root{
+--bg:#F5F3EE;
+--card:#FCFBF8;
+--text:#111111;
+--muted:#6B7280;
+--border:#E5E7EB;
+--accent:#8B1E24;
+--accent-dark:#70161B;
+--priority:#FFF5F5;
+--shadow:0 10px 30px rgba(0,0,0,.04);
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Plus Jakarta Sans',sans-serif;
+-webkit-tap-highlight-color:transparent;
+}
+
+body{
+background:var(--bg);
+padding:18px;
+color:var(--text);
+line-height:1.4;
+}
+
+.container{
+max-width:760px;
+margin:auto;
+padding-bottom:120px;
+}
+
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:20px;
+padding:20px;
+margin-bottom:14px;
+box-shadow:var(--shadow);
+}
+
+h1{
+font-size:2.2rem;
+font-weight:800;
+letter-spacing:-0.04em;
+margin-bottom:6px;
+}
+
+.sub{
+color:var(--muted);
+margin-bottom:22px;
+font-weight:500;
+}
+
+.section-title{
+font-size:.82rem;
+font-weight:800;
+letter-spacing:.08em;
+text-transform:uppercase;
+margin-bottom:14px;
+color:var(--muted);
+}
+
+.segmented{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+
+.segment{
+padding:11px 16px;
+border-radius:14px;
+border:1px solid var(--border);
+background:white;
+font-weight:700;
+font-size:.92rem;
+cursor:pointer;
+transition:.18s ease;
+min-height:44px;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.segment:hover{
+transform:translateY(-1px);
+}
+
+.segment.active{
+background:var(--accent);
+border-color:var(--accent);
+color:white;
+}
+
+.stepper{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.step-btn{
+width:42px;
+height:42px;
+border:none;
+border-radius:14px;
+background:var(--accent);
+color:white;
+font-size:1.1rem;
+font-weight:800;
+cursor:pointer;
+transition:.18s ease;
+}
+
+.step-btn:active{
+transform:scale(.95);
+background:var(--accent-dark);
+}
+
+.step-input{
+flex:1;
+height:42px;
+border-radius:14px;
+border:1px solid var(--border);
+text-align:center;
+font-size:1rem;
+font-weight:800;
+background:white;
+outline:none;
+}
+
+.hint{
+margin-top:10px;
+font-size:.82rem;
+color:var(--muted);
+font-weight:600;
+line-height:1.5;
+}
+
+.print-grid{
+display:grid;
+gap:12px;
+}
+
+.print-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:12px;
+}
+
+.print-row label{
+font-weight:700;
+color:var(--muted);
+}
+
+.print-row input{
+width:110px;
+height:42px;
+border-radius:14px;
+border:1px solid var(--border);
+padding:0 12px;
+font-weight:700;
+background:white;
+outline:none;
+}
+
+.breakdown{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.break-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:13px 14px;
+border-radius:14px;
+background:#FAFAFA;
+border:1px solid var(--border);
+transition:.18s ease;
+}
+
+.break-row:hover{
+transform:translateY(-1px);
+}
+
+.break-row span{
+font-weight:700;
+color:var(--muted);
+}
+
+.break-row strong{
+font-weight:800;
+}
+
+.priority{
+background:var(--priority);
+border-color:#F3D4D7;
+}
+
+.sticky{
+position:fixed;
+left:14px;
+right:14px;
+bottom:14px;
+background:rgba(255,255,255,.95);
+border:1px solid var(--border);
+padding:14px 16px;
+border-radius:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+backdrop-filter:blur(18px);
+box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+
+.total{
+font-size:1.6rem;
+font-weight:800;
+letter-spacing:-0.03em;
+}
+
+.btn{
+height:48px;
+padding:0 18px;
+border:none;
+border-radius:16px;
+background:var(--accent);
+color:white;
+font-weight:800;
+cursor:pointer;
+transition:.2s ease;
+}
+
+.btn:hover{
+background:var(--accent-dark);
+}
+
+.btn:active{
+transform:scale(.97);
+}
+
+.spin-update{
+animation:spinPulse .45s ease;
+}
+
+@keyframes spinPulse{
+0%{transform:scale(1) rotate(0deg);}
+35%{transform:scale(1.05) rotate(2deg);}
+70%{transform:scale(.98) rotate(-1deg);}
+100%{transform:scale(1) rotate(0deg);}
+}
+
+.hidden{
+display:none!important;
+}
+
+@media(max-width:640px){
+
+body{
+padding:14px;
+}
+
+.card{
+padding:18px;
+}
+
+h1{
+font-size:2rem;
+}
+
+.segment{
+flex:1 1 calc(50% - 8px);
+}
+
+.print-row{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.print-row input{
+width:100%;
+}
+
+.sticky{
+padding:12px 14px;
+}
+
+.total{
+font-size:1.45rem;
+}
+
+.btn{
+height:46px;
+padding:0 16px;
+}
+}
