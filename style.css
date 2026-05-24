@@ -1,0 +1,105 @@
+:root {
+    --primary: #D90429;
+    --primary-hover: #b00322;
+    --bg-main: #f4f5f7;
+    --text-main: #0B0C10;
+    --text-muted: #6B6C75;
+    --border: #E5E5E0;
+    --card-bg: #ffffff;
+    --radius: 12px;
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* This ensures you can scroll past the fixed footer */
+.main-wrapper {
+    padding: 20px;
+    padding-bottom: 380px; /* Space for the footer so it never hides inputs */
+}
+
+.container { max-width: 800px; margin: 0 auto; }
+header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 5px; }
+header .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 0; margin-bottom: 30px; }
+
+.input-group {
+    background: var(--card-bg);
+    padding: 24px;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+    transition: var(--transition);
+}
+
+.input-group:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+.input-group h2 { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 20px; }
+.form-row { margin-bottom: 20px; }
+label { font-weight: 600; font-size: 0.95rem; display: block; margin-bottom: 8px; }
+
+input[type="number"] {
+    width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px;
+    font-size: 1rem; font-family: inherit; transition: var(--transition); box-sizing: border-box;
+}
+input[type="number"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(217, 4, 41, 0.1); }
+
+.radio-group, .checkbox-group { display: flex; flex-wrap: wrap; gap: 15px; }
+.radio-group label, .checkbox-group label { font-weight: 400; display: flex; align-items: center; cursor: pointer; margin-bottom: 0; transition: var(--transition); }
+.radio-group input, .checkbox-group input { margin-right: 8px; cursor: pointer; }
+
+.drawer {
+    display: none; background: #fafafa; padding: 15px; border-radius: 8px;
+    margin-bottom: 20px; border: 1px dashed var(--border); animation: fadeIn 0.3s ease;
+}
+.drawer.open { display: block; }
+
+.dynamic-pg-input {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px; padding: 12px; background: #fff;
+    border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    animation: fadeIn 0.3s ease;
+}
+.dynamic-pg-input label { margin: 0; font-weight: 700; color: var(--primary); }
+.dynamic-pg-input input { width: 100px; text-align: center; }
+
+.smooth-hidden { display: none !important; }
+
+/* Fixed Footer Fix */
+.sticky-footer-wrapper {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--card-bg); box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+    z-index: 1000; border-top: 1px solid var(--border);
+}
+.sticky-footer-content { max-width: 800px; margin: 0 auto; padding: 20px; max-height: 40vh; overflow-y: auto; }
+
+.total-block { text-align: center; margin-bottom: 15px; }
+.total-block span { text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; color: var(--text-muted); }
+.hero-total { font-size: 2.5rem; font-weight: 800; color: var(--text-main); line-height: 1.2; transition: var(--transition); }
+
+.primary-btn {
+    width: 100%; background: var(--primary); color: #fff; border: none;
+    padding: 16px; border-radius: 8px; font-size: 1.1rem; font-weight: 600;
+    cursor: pointer; transition: var(--transition);
+}
+.primary-btn:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(217, 4, 41, 0.2); }
+
+.breakdown-area { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9rem; border: 1px solid var(--border); transition: var(--transition); }
+.breakdown-header { font-size: 1.05rem; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #ccc; color: #222; }
+.bd-row { display: flex; justify-content: space-between; padding: 4px 0; }
+
+#toast {
+    position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
+    background: var(--text-main); color: #fff; padding: 12px 24px;
+    border-radius: 30px; display: flex; align-items: center; gap: 10px;
+    transition: top 0.4s ease; z-index: 2000;
+}
+#toast.show { top: 20px; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
