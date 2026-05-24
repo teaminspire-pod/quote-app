@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Team Inspire | Precision Estimator</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-wrapper">
+        <div class="container">
+            
+            <header class="app-header">
+                <div class="logo-mark">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" width="48" height="48">
+                        <rect width="100" height="100" rx="20" fill="#D90429"/>
+                        <path d="M30 35H70V45H55V70H45V45H30V35Z" fill="#F5F4F1"/>
+                        <circle cx="70" cy="70" r="8" fill="#F5F4F1"/>
+                    </svg>
+                </div>
+                <div class="header-text">
+                    <h1>Quote Estimator</h1>
+                    <p class="subtitle">High-Fidelity Print Calculation Engine</p>
+                </div>
+            </header>
+
+            <form id="quoteForm">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <span class="step-num">01</span>
+                        <h2>Book Specifications</h2>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label class="section-label">Master Dimension</label>
+                        <div class="sliding-toggle-group">
+                            <input type="radio" name="masterSize" id="sizeA4" value="A4" checked>
+                            <label for="sizeA4">A4</label>
+                            
+                            <input type="radio" name="masterSize" id="sizeA5" value="A5">
+                            <label for="sizeA5">A5</label>
+                            
+                            <input type="radio" name="masterSize" id="sizeA6" value="A6">
+                            <label for="sizeA6">A6</label>
+                        </div>
+                    </div>
+
+                    <div class="dimension-window" id="dimWindow">
+                        <div class="dim-unit">
+                            <span class="dim-val" id="dimMM">210 × 297</span>
+                            <span class="dim-label">mm</span>
+                        </div>
+                        <div class="dim-divider"></div>
+                        <div class="dim-unit">
+                            <span class="dim-val" id="dimCM">21.0 × 29.7</span>
+                            <span class="dim-label">cm</span>
+                        </div>
+                        <div class="dim-divider"></div>
+                        <div class="dim-unit">
+                            <span class="dim-val" id="dimIN">8.27 × 11.69</span>
+                            <span class="dim-label">inch</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label class="section-label" for="bookQty">Production Quantity (MOQ: 4)</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="bookQty" class="heavy-input" value="50" min="4" max="1000">
+                            <span class="input-suffix">Units</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="card-header">
+                        <span class="step-num">02</span>
+                        <h2>Interior Composition</h2>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label class="section-label">Active Print Types</label>
+                        <div class="sliding-toggle-group checkbox-mode">
+                            <input type="checkbox" id="ptBW" class="print-type-cb" value="Black & White" checked>
+                            <label for="ptBW">B&W</label>
+
+                            <input type="checkbox" id="ptColor" class="print-type-cb" value="Multi Color">
+                            <label for="ptColor">Color</label>
+
+                            <input type="checkbox" id="ptPlain" class="print-type-cb" value="Plain (without print)">
+                            <label for="ptPlain">Plain</label>
+                        </div>
+                    </div>
+                    
+                    <div id="dynamicPageInputs" class="dynamic-injection-zone"></div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="card-header">
+                        <span class="step-num">03</span>
+                        <h2>Paper & Stock</h2>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label class="section-label">Material Type</label>
+                        <div class="sliding-toggle-group">
+                            <input type="radio" name="paperType" id="typeNS" value="NS" checked>
+                            <label for="typeNS">Natural Shade</label>
+
+                            <input type="radio" name="paperType" id="typeMaplitho" value="MaplithoWhite">
+                            <label for="typeMaplitho">Maplitho (White)</label>
+
+                            <input type="radio" name="paperType" id="typeArt" value="Art Paper">
+                            <label for="typeArt" id="labelTypeArt" class="logic-hidden">Art Paper</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label class="section-label">Interior Weight (GSM)</label>
+                        <div class="sliding-toggle-group gsm-group">
+                            <input type="radio" name="paperGsm" id="gsm70" value="70">
+                            <label for="gsm70" id="labelGsm70">70</label>
+
+                            <input type="radio" name="paperGsm" id="gsm80" value="80" checked>
+                            <label for="gsm80" id="labelGsm80">80</label>
+
+                            <input type="radio" name="paperGsm" id="gsm100" value="100">
+                            <label for="gsm100" id="labelGsm100">100</label>
+
+                            <input type="radio" name="paperGsm" id="gsm120" value="120">
+                            <label for="gsm120" id="labelGsm120">120</label>
+
+                            <input type="radio" name="paperGsm" id="gsm130" value="130">
+                            <label for="gsm130" id="labelGsm130" class="logic-hidden">130</label>
+
+                            <input type="radio" name="paperGsm" id="gsm170" value="170">
+                            <label for="gsm170" id="labelGsm170" class="logic-hidden">170</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="card-header">
+                        <span class="step-num">04</span>
+                        <h2>Finishing & Binding</h2>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label class="section-label">Binding Style</label>
+                        <div class="sliding-toggle-group">
+                            <input type="radio" name="bindingStyle" id="bindPerf" value="Perfect Binding" checked>
+                            <label for="bindPerf">Perfect</label>
+
+                            <input type="radio" name="bindingStyle" id="bindStaple" value="Centre Stapling">
+                            <label for="bindStaple">Stapled</label>
+
+                            <input type="radio" name="bindingStyle" id="bindSpiral" value="Spiral Binding">
+                            <label for="bindSpiral">Spiral</label>
+
+                            <input type="radio" name="bindingStyle" id="bindHard" value="Hardbinding">
+                            <label for="bindHard">Hardbind</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label class="section-label">Cover Weight (GSM)</label>
+                        <div class="sliding-toggle-group">
+                            <input type="radio" name="coverGsm" id="cover170" value="170">
+                            <label for="cover170" id="labelCover170">170</label>
+
+                            <input type="radio" name="coverGsm" id="cover250" value="250" checked>
+                            <label for="cover250">250</label>
+
+                            <input type="radio" name="coverGsm" id="cover300" value="300">
+                            <label for="cover300">300</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label class="section-label">Lamination</label>
+                        <div class="sliding-toggle-group">
+                            <input type="radio" name="lamination" id="lamMatte" value="Matte" checked>
+                            <label for="lamMatte">Matte</label>
+
+                            <input type="radio" name="lamination" id="lamGlossy" value="Glossy">
+                            <label for="lamGlossy">Glossy</label>
+
+                            <input type="radio" name="lamination" id="lamNone" value="No Lamination">
+                            <label for="lamNone">None</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="card-header">
+                        <span class="step-num">05</span>
+                        <h2>Modifiers & Services</h2>
+                    </div>
+                    
+                    <div class="modifier-group">
+                        <div class="sliding-toggle-group checkbox-mode full-width alert-mode">
+                            <input type="checkbox" id="emergencyCharge">
+                            <label for="emergencyCharge">
+                                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                                Priority Mfg Surcharge (+35%)
+                            </label>
+                        </div>
+                        <div class="sliding-toggle-group checkbox-mode full-width" style="margin-top:10px;">
+                            <input type="checkbox" id="toggleDesign">
+                            <label for="toggleDesign">
+                                <svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                                Add Pre-Press & Design
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="designDrawer" class="mechanical-drawer logic-hidden">
+                        <div class="drawer-inner">
+                            <div class="sliding-toggle-group checkbox-mode full-width">
+                                <input type="checkbox" id="coverDesign">
+                                <label for="coverDesign">Cover Design (₹2500)</label>
+                                
+                                <input type="checkbox" id="pubPackage">
+                                <label for="pubPackage">Publishing (₹3500)</label>
+                            </div>
+                            
+                            <div class="service-grid">
+                                <div class="input-wrapper">
+                                    <label class="micro-label">Custom Layout</label>
+                                    <input type="number" id="designPages" class="heavy-input minor" placeholder="0" min="0">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="micro-label">Basic Layout</label>
+                                    <input type="number" id="layoutPages" class="heavy-input minor" placeholder="0" min="0">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="micro-label">DTP Pgs</label>
+                                    <input type="number" id="dtpPages" class="heavy-input minor" placeholder="0" min="0">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="micro-label">Proofing Pgs</label>
+                                    <input type="number" id="proofingPages" class="heavy-input minor" placeholder="0" min="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="sticky-bottom-bar">
+        <div class="bar-container">
+            <div class="total-display-zone">
+                <span class="total-label">Estimated Grand Total</span>
+                <div id="grandTotalDisplayDesk" class="digital-counter">₹0</div>
+            </div>
+            <button class="action-btn" id="exportBtn">Send Professional Quote</button>
+        </div>
+    </div>
+    
+    <div id="toast" class="system-toast"><span id="toastMsg"></span></div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
