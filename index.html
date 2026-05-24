@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Inspire POD - Professional Estimator</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Quote Estimator</h1>
+            <p class="subtitle">Precision Print Calculation Engine</p>
+        </header>
+
+        <form id="quoteForm">
+            <div class="card">
+                <h2>1. Book Specifications</h2>
+                <div class="form-row">
+                    <label>Book Size</label>
+                    <div class="radio-tab-group">
+                        <input type="radio" name="masterSize" id="sizeA4" value="A4" checked>
+                        <label for="sizeA4">A4 (210x297mm)</label>
+                        
+                        <input type="radio" name="masterSize" id="sizeA5" value="A5">
+                        <label for="sizeA5">A5 (148x210mm)</label>
+                        
+                        <input type="radio" name="masterSize" id="sizeA6" value="A6">
+                        <label for="sizeA6">A6 (105x148mm)</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>Quantity (MOQ: 4)</label>
+                    <input type="number" id="bookQty" class="num-input" value="50" min="4" max="1000">
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>2. Interior Composition</h2>
+                <div class="form-row">
+                    <label>Print Type (Select to build breakdown)</label>
+                    <div class="checkbox-tab-group">
+                        <input type="checkbox" id="ptBW" class="print-type-cb" value="Black & White" checked>
+                        <label for="ptBW">Black & White</label>
+
+                        <input type="checkbox" id="ptColor" class="print-type-cb" value="Multi Color">
+                        <label for="ptColor">Multi Color</label>
+
+                        <input type="checkbox" id="ptPlain" class="print-type-cb" value="Plain (without print)">
+                        <label for="ptPlain">Plain</label>
+                    </div>
+                </div>
+                <div id="dynamicPageInputs" class="dynamic-container"></div>
+            </div>
+
+            <div class="card">
+                <h2>3. Paper & Stock</h2>
+                <div class="form-row">
+                    <label>Paper Type</label>
+                    <div class="radio-tab-group">
+                        <input type="radio" name="paperType" id="typeNS" value="NS" checked>
+                        <label for="typeNS">Natural Shade</label>
+
+                        <input type="radio" name="paperType" id="typeMaplitho" value="MaplithoWhite">
+                        <label for="typeMaplitho">Maplitho (White)</label>
+
+                        <input type="radio" name="paperType" id="typeArt" value="Art Paper">
+                        <label for="typeArt" id="labelTypeArt" class="smooth-hidden">Art Paper</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>Interior GSM</label>
+                    <div class="radio-tab-group" id="gsmGroup">
+                        <input type="radio" name="paperGsm" id="gsm70" value="70">
+                        <label for="gsm70" id="labelGsm70">70</label>
+
+                        <input type="radio" name="paperGsm" id="gsm80" value="80" checked>
+                        <label for="gsm80" id="labelGsm80">80</label>
+
+                        <input type="radio" name="paperGsm" id="gsm100" value="100">
+                        <label for="gsm100" id="labelGsm100">100</label>
+
+                        <input type="radio" name="paperGsm" id="gsm120" value="120">
+                        <label for="gsm120" id="labelGsm120">120</label>
+
+                        <input type="radio" name="paperGsm" id="gsm130" value="130">
+                        <label for="gsm130" id="labelGsm130" class="smooth-hidden">130</label>
+
+                        <input type="radio" name="paperGsm" id="gsm170" value="170">
+                        <label for="gsm170" id="labelGsm170" class="smooth-hidden">170</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>4. Finishing & Binding</h2>
+                <div class="form-row">
+                    <label>Binding Style</label>
+                    <div class="radio-tab-group">
+                        <input type="radio" name="bindingStyle" id="bindPerf" value="Perfect Binding" checked>
+                        <label for="bindPerf">Perfect Binding</label>
+
+                        <input type="radio" name="bindingStyle" id="bindStaple" value="Centre Stapling">
+                        <label for="bindStaple">Centre Stapling</label>
+
+                        <input type="radio" name="bindingStyle" id="bindSpiral" value="Spiral Binding">
+                        <label for="bindSpiral">Spiral Binding</label>
+
+                        <input type="radio" name="bindingStyle" id="bindHard" value="Hardbinding">
+                        <label for="bindHard">Hardbinding</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>Cover Stock (GSM)</label>
+                    <div class="radio-tab-group">
+                        <input type="radio" name="coverGsm" id="cover170" value="170">
+                        <label for="cover170" id="labelCover170">170</label>
+
+                        <input type="radio" name="coverGsm" id="cover250" value="250" checked>
+                        <label for="cover250">250</label>
+
+                        <input type="radio" name="coverGsm" id="cover300" value="300">
+                        <label for="cover300">300</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>Lamination</label>
+                    <div class="radio-tab-group">
+                        <input type="radio" name="lamination" id="lamMatte" value="Matte" checked>
+                        <label for="lamMatte">Matte</label>
+
+                        <input type="radio" name="lamination" id="lamGlossy" value="Glossy">
+                        <label for="lamGlossy">Glossy</label>
+
+                        <input type="radio" name="lamination" id="lamNone" value="No Lamination">
+                        <label for="lamNone">None</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>5. Additional Services</h2>
+                <div class="form-row">
+                    <div class="checkbox-tab-group">
+                        <input type="checkbox" id="emergencyCharge">
+                        <label for="emergencyCharge" style="width: 100%; border-color: #D90429; color: #D90429;">⚠️ Priority Service (+35%)</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="checkbox-tab-group">
+                        <input type="checkbox" id="toggleDesign">
+                        <label for="toggleDesign" style="width: 100%;">⚙️ Add Pre-Press & Design Services</label>
+                    </div>
+                </div>
+                
+                <div id="designDrawer" class="drawer">
+                    <div class="form-row">
+                        <div class="checkbox-tab-group">
+                            <input type="checkbox" id="coverDesign">
+                            <label for="coverDesign">Cover Design (₹2500)</label>
+                            <input type="checkbox" id="pubPackage">
+                            <label for="pubPackage">Publishing (₹3500)</label>
+                        </div>
+                    </div>
+                    <div class="form-row drawer-grid">
+                        <div>
+                            <label>Custom Layout</label>
+                            <input type="number" id="designPages" class="num-input" placeholder="0" min="0">
+                        </div>
+                        <div>
+                            <label>Basic Layout</label>
+                            <input type="number" id="layoutPages" class="num-input" placeholder="0" min="0">
+                        </div>
+                        <div>
+                            <label>DTP Pages</label>
+                            <input type="number" id="dtpPages" class="num-input" placeholder="0" min="0">
+                        </div>
+                        <div>
+                            <label>Proof Reading</label>
+                            <input type="number" id="proofingPages" class="num-input" placeholder="0" min="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="results-panel">
+            <div class="total-block">
+                <span>Estimated Grand Total</span>
+                <div id="grandTotalDisplayDesk" class="hero-total">₹0</div>
+            </div>
+            <div id="bdScrollArea" class="breakdown-area"></div>
+            <button class="primary-btn" id="exportBtn">Generate WhatsApp Quote</button>
+        </div>
+    </div>
+    
+    <div id="toast"><span id="toastMsg"></span></div>
+    <script src="script.js"></script>
+</body>
+</html>
